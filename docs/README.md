@@ -12,6 +12,6 @@ Lele, S. R., 2010. Model complexity and information in the data: Could it be a h
 
 Solymos, P., 2010. dclone: Data Cloning in R. The R Journal 2(2):29-37. [PDF](solymos-2010-dc.pdf)
 
-Lele, S. R., 2020. Consequences of Lack of Parameterization Invariance of Non-informative Bayesian Analysis for Wildlife Management: Survival of San Joaquin Kit Fox and Declines in Amphibian Populations. Front. Ecol. Evol. 7:501. [PDF](lele-2020-parametrization.pdf)
+Lele, S. R., 2020. Consequences of lack of parameterization invariance of non-informative bayesian analysis for wildlife management: survival of San Joaquin Kit Fox and declines in amphibian populations. Front. Ecol. Evol. 7:501. [PDF](lele-2020-parametrization.pdf)
 
 Lele, S. R., 2020. How should we quantify uncertainty in statistical inference? Front. Ecol. Evol. 8:35. [PDF](lele-2020-uncertainty.pdf)
