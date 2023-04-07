@@ -29,3 +29,5 @@ Lele, S.R., B. Dennis and F. Lutscher, 2007. Data cloning: easy maximum likeliho
 Lele, S. R., Nadeem, K., and Schmuland, B., 2010. Estimability and likelihood inference for generalized linear mixed models using data cloning. Journal of the American Statistical Association 105, 1617-1625. [DOI 10.1198/jasa.2010.tm09757­](https://doi.org/10.1198/jasa.2010.tm09757­)
 
 Solymos, P., 2010. dclone: Data Cloning in R. The R Journal 2(2), 29-37. URL <https://journal.r-project.org/archive/2010/RJ-2010-011/RJ-2010-011.pdf>
+
+See PDFs in the [docs](./docs/) folder.
