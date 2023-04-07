@@ -7,6 +7,10 @@ output:
       url: https://latex.codecogs.com/svg.image?
 ---
 
+```{r include=FALSE}
+set.seed(0)
+```
+
 ## Introduction
 
 In the first part of the course, we will go over some statistical preliminaries and corresponding computational aspects. We will learn:
