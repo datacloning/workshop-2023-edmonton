@@ -3,24 +3,42 @@
 
 **CalgaryR & YEGRUG Meetup: Data Cloning - Hierarchical Models Made Easy**
 
+## Attend
+
 Jointly organized by the [Edmonton R User Group](https://yegrug.github.io/) & [CalgaryR](https://imstatsbee.github.io/calgaryr/)
 
-This is a 4-hours long hybrid (in-person and online) event:
+This is a 4-hour long hybrid (in-person and online) event:
 
 - Date: April 13, 2023
 - Time: 2-6 pm
 - Location: University of Alberta, Dept. Biological Sciences, room G-113 ([map](https://www.ualberta.ca/maps.html?l=53.52898,-113.526374&z=17&campus=north_campus&b=bs))
 
-Instructors:
+## Instructors
 
 - [Subhash Lele](https://scholar.google.ca/citations?hl=en&user=1CNJm5UAAAAJ­), Professor Emeritus, Dept. of Mathematical and Statistical Sciences, U. of Alberta
 - [Peter Solymos](https://peter.solymos.org/­), Senior Data Scientist, Organizer of Edmonton R User Group, R package author
+
+## Sponsors
+
+[![R Consortium](https://www.r-consortium.org/wp-content/uploads/sites/13/2016/09/RConsortium_Horizontal_Pantone.png)](https://www.r-consortium.org/)
+
+[![Analythium](https://github.com/analythium/assets/raw/master/docs/marks/word-mark-dark-wide.png)](https://analythium.io/)
+
+## Synopsis
 
 Mixed models, also known as hierarchical models and multilevel models, is a useful class of models for applied sciences. The goal of this workshop is to give an introduction to the logic, theory, and implementation of these models to solve practical problems. The workshop will include a seminar style overview and hands on exercises including common model classes and examples that participants can extend for their own needs.
 
 Participants are expected to know the basics of R programming and regression techniques. A basic idea about hierarchical models and Bayesian/MCMC techniques will help but is not required.
 
 At the end of the workshop, you will have a good idea about why everyone is not a Bayesian, how to use Bayesian techniques for frequentist inference, how to critically diagnose identifiability issues, and how to make likelihood-based inference for (almost) any hierarchical modeling case.
+
+## Before the course
+
+Follow [instructions](setup.md) to set up your laptop, or wait for the link for a cloud server.
+
+Read the [notes](./prior/) about statistical concepts and the workflow we will rely on, and play with the [Shiny app](./app/).
+
+## Resources
 
 | Topic    | Links |
 | -------- | ------- |
