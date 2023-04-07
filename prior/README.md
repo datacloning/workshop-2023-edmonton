@@ -222,7 +222,7 @@ table(Y)
 
     ## Y
     ##  0  1 
-    ## 20 10
+    ## 21  9
 
 Analytical MLE:
 
@@ -285,18 +285,18 @@ summary(Occ.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean             SD       Naive SE Time-series SE 
-    ##      0.3443441      0.0819923      0.0006695      0.0008448 
+    ##      0.3120904      0.0810738      0.0006620      0.0008335 
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##   2.5%    25%    50%    75%  97.5% 
-    ## 0.1941 0.2866 0.3421 0.3990 0.5131
+    ## 0.1658 0.2545 0.3087 0.3654 0.4790
 
 ``` r
 plot(Occ.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 This was quite easy. Now we use data cloning to compute the MLE and its
 variance using MCMC.
@@ -385,34 +385,34 @@ dclone(Y, 2)
 ```
 
     ##       clone.1 clone.2
-    ##  [1,]       0       0
+    ##  [1,]       1       1
     ##  [2,]       0       0
-    ##  [3,]       0       0
-    ##  [4,]       0       0
-    ##  [5,]       1       1
+    ##  [3,]       1       1
+    ##  [4,]       1       1
+    ##  [5,]       0       0
     ##  [6,]       0       0
-    ##  [7,]       1       1
-    ##  [8,]       1       1
+    ##  [7,]       0       0
+    ##  [8,]       0       0
     ##  [9,]       0       0
     ## [10,]       0       0
-    ## [11,]       0       0
+    ## [11,]       1       1
     ## [12,]       0       0
-    ## [13,]       1       1
+    ## [13,]       0       0
     ## [14,]       1       1
-    ## [15,]       1       1
-    ## [16,]       0       0
-    ## [17,]       1       1
+    ## [15,]       0       0
+    ## [16,]       1       1
+    ## [17,]       0       0
     ## [18,]       0       0
     ## [19,]       0       0
     ## [20,]       0       0
     ## [21,]       0       0
     ## [22,]       0       0
-    ## [23,]       1       1
-    ## [24,]       1       1
-    ## [25,]       0       0
-    ## [26,]       0       0
-    ## [27,]       0       0
-    ## [28,]       1       1
+    ## [23,]       0       0
+    ## [24,]       0       0
+    ## [25,]       1       1
+    ## [26,]       1       1
+    ## [27,]       1       1
+    ## [28,]       0       0
     ## [29,]       0       0
     ## [30,]       0       0
     ## attr(,"n.clones")
@@ -429,34 +429,34 @@ dclone(dat, 2)
 
     ## $Y
     ##       clone.1 clone.2
-    ##  [1,]       0       0
+    ##  [1,]       1       1
     ##  [2,]       0       0
-    ##  [3,]       0       0
-    ##  [4,]       0       0
-    ##  [5,]       1       1
+    ##  [3,]       1       1
+    ##  [4,]       1       1
+    ##  [5,]       0       0
     ##  [6,]       0       0
-    ##  [7,]       1       1
-    ##  [8,]       1       1
+    ##  [7,]       0       0
+    ##  [8,]       0       0
     ##  [9,]       0       0
     ## [10,]       0       0
-    ## [11,]       0       0
+    ## [11,]       1       1
     ## [12,]       0       0
-    ## [13,]       1       1
+    ## [13,]       0       0
     ## [14,]       1       1
-    ## [15,]       1       1
-    ## [16,]       0       0
-    ## [17,]       1       1
+    ## [15,]       0       0
+    ## [16,]       1       1
+    ## [17,]       0       0
     ## [18,]       0       0
     ## [19,]       0       0
     ## [20,]       0       0
     ## [21,]       0       0
     ## [22,]       0       0
-    ## [23,]       1       1
-    ## [24,]       1       1
-    ## [25,]       0       0
-    ## [26,]       0       0
-    ## [27,]       0       0
-    ## [28,]       1       1
+    ## [23,]       0       0
+    ## [24,]       0       0
+    ## [25,]       1       1
+    ## [26,]       1       1
+    ## [27,]       1       1
+    ## [28,]       0       0
     ## [29,]       0       0
     ## [30,]       0       0
     ## attr(,"n.clones")
@@ -489,34 +489,34 @@ dclone(dat, 2, unchanged="n", multiply="ncl")
 
     ## $Y
     ##       clone.1 clone.2
-    ##  [1,]       0       0
+    ##  [1,]       1       1
     ##  [2,]       0       0
-    ##  [3,]       0       0
-    ##  [4,]       0       0
-    ##  [5,]       1       1
+    ##  [3,]       1       1
+    ##  [4,]       1       1
+    ##  [5,]       0       0
     ##  [6,]       0       0
-    ##  [7,]       1       1
-    ##  [8,]       1       1
+    ##  [7,]       0       0
+    ##  [8,]       0       0
     ##  [9,]       0       0
     ## [10,]       0       0
-    ## [11,]       0       0
+    ## [11,]       1       1
     ## [12,]       0       0
-    ## [13,]       1       1
+    ## [13,]       0       0
     ## [14,]       1       1
-    ## [15,]       1       1
-    ## [16,]       0       0
-    ## [17,]       1       1
+    ## [15,]       0       0
+    ## [16,]       1       1
+    ## [17,]       0       0
     ## [18,]       0       0
     ## [19,]       0       0
     ## [20,]       0       0
     ## [21,]       0       0
     ## [22,]       0       0
-    ## [23,]       1       1
-    ## [24,]       1       1
-    ## [25,]       0       0
-    ## [26,]       0       0
-    ## [27,]       0       0
-    ## [28,]       1       1
+    ## [23,]       0       0
+    ## [24,]       0       0
+    ## [25,]       1       1
+    ## [26,]       1       1
+    ## [27,]       1       1
+    ## [28,]       0       0
     ## [29,]       0       0
     ## [30,]       0       0
     ## attr(,"n.clones")
@@ -598,18 +598,18 @@ summary(Occ.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean      SD DC SD.phi_occ  Naive SE Time-series SE R hat
-    ## phi_occ 0.3359 0.03844       0.08595 0.0003138      0.0003985 1.001
+    ## phi_occ 0.3026 0.03677       0.08223 0.0003002      0.0003825 1.001
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##   2.5%    25%    50%    75%  97.5% 
-    ## 0.2626 0.3098 0.3352 0.3610 0.4133
+    ## 0.2333 0.2773 0.3017 0.3269 0.3774
 
 ``` r
 plot(Occ.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ## Regression models
 
@@ -687,20 +687,20 @@ summary(Occ.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean     SD Naive SE Time-series SE
-    ## beta[1] 0.4478 0.3631 0.002965       0.003546
-    ## beta[2] 0.5152 0.4421 0.003610       0.004744
+    ## beta[1] 0.4938 0.3893 0.003179       0.003962
+    ## beta[2] 1.0205 0.4295 0.003507       0.004756
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##            2.5%    25%    50%    75% 97.5%
-    ## beta[1] -0.2460 0.1983 0.4419 0.6917 1.170
-    ## beta[2] -0.3284 0.2162 0.5066 0.8051 1.414
+    ## beta[1] -0.2293 0.2256 0.4857 0.7515 1.274
+    ## beta[2]  0.2373 0.7195 0.9972 1.2957 1.926
 
 ``` r
 plot(Occ.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 Now we modify this to get the MLE using data cloning.
 
@@ -792,20 +792,20 @@ summary(Occ.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean     SD  DC SD Naive SE Time-series SE R hat
-    ## beta[1] 0.4832 0.1700 0.3800 0.001388       0.001818 1.001
-    ## beta[2] 0.5586 0.2126 0.4755 0.001736       0.002224 1.000
+    ## beta[1] 0.5642 0.1941 0.4341 0.001585       0.002146 1.000
+    ## beta[2] 1.1199 0.2184 0.4884 0.001783       0.002350 1.001
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.1493 0.3711 0.4836 0.5954 0.8167
-    ## beta[2] 0.1537 0.4137 0.5564 0.7012 0.9834
+    ## beta[1] 0.1968 0.4319 0.5606 0.6913 0.9564
+    ## beta[2] 0.7170 0.9695 1.1112 1.2638 1.5697
 
 ``` r
 plot(Occ.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 We hope you can see the pattern in how we are changing the prototype
 model function and the data function. If we want to do a Normal linear
@@ -871,22 +871,22 @@ summary(Normal.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean     SD Naive SE Time-series SE
-    ## beta[1] 0.6997 0.1838 0.001501       0.001621
-    ## beta[2] 0.6055 0.1712 0.001398       0.001515
-    ## prec.e  1.1110 0.2887 0.002357       0.003329
+    ## beta[1] 0.1861 0.2157 0.001761       0.001831
+    ## beta[2] 1.2179 0.2068 0.001689       0.001719
+    ## prec.e  0.7612 0.1965 0.001605       0.002308
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.3365 0.5777 0.6986 0.8231 1.0609
-    ## beta[2] 0.2671 0.4929 0.6053 0.7186 0.9415
-    ## prec.e  0.6245 0.9053 1.0852 1.2860 1.7481
+    ##            2.5%    25%    50%    75%  97.5%
+    ## beta[1] -0.2403 0.0432 0.1871 0.3292 0.6079
+    ## beta[2]  0.8122 1.0810 1.2162 1.3564 1.6209
+    ## prec.e   0.4260 0.6198 0.7443 0.8847 1.1933
 
 ``` r
 plot(Normal.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 ``` r
 # MLE using data cloning.
@@ -966,22 +966,22 @@ summary(Normal.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## beta[1] 0.7149 0.07839 0.1753 0.0006400      0.0006986 1.000
-    ## beta[2] 0.6155 0.07331 0.1639 0.0005985      0.0006439 1.000
-    ## prec.e  1.1706 0.13598 0.3041 0.0011103      0.0014387 1.001
+    ## beta[1] 0.2030 0.09366 0.2094 0.0007647      0.0008092 1.000
+    ## beta[2] 1.2630 0.08940 0.1999 0.0007299      0.0007567 1.000
+    ## prec.e  0.7962 0.09071 0.2028 0.0007407      0.0009539 1.002
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.5615 0.6625 0.7145 0.7673 0.8701
-    ## beta[2] 0.4710 0.5660 0.6158 0.6656 0.7588
-    ## prec.e  0.9218 1.0758 1.1649 1.2599 1.4547
+    ##            2.5%    25%    50%    75%  97.5%
+    ## beta[1] 0.02136 0.1395 0.2032 0.2667 0.3856
+    ## beta[2] 1.08825 1.2028 1.2620 1.3229 1.4399
+    ## prec.e  0.62819 0.7331 0.7936 0.8556 0.9797
 
 ``` r
 plot(Normal.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
 
 ### Poisson log-link regression
 
@@ -1040,21 +1040,21 @@ summary(Poisson.Bayes)
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##           Mean     SD Naive SE Time-series SE
-    ## beta[1] 0.5869 0.1517 0.001239        0.00257
-    ## beta[2] 0.9189 0.1110 0.000906        0.00186
+    ##           Mean     SD  Naive SE Time-series SE
+    ## beta[1] 0.1042 0.1895 0.0015471       0.004293
+    ## beta[2] 1.1772 0.1173 0.0009578       0.002670
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.2788 0.4865 0.5893 0.6915 0.8711
-    ## beta[2] 0.7073 0.8422 0.9163 0.9939 1.1421
+    ##            2.5%      25%    50%    75%  97.5%
+    ## beta[1] -0.2814 -0.02032 0.1083 0.2332 0.4629
+    ## beta[2]  0.9509  1.09735 1.1770 1.2564 1.4080
 
 ``` r
 plot(Poisson.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ``` r
 # MLE using data cloning
@@ -1133,20 +1133,20 @@ summary(Poisson.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## beta[1] 0.5989 0.06990 0.1563 0.0005707       0.001215 1.002
-    ## beta[2] 0.9226 0.05058 0.1131 0.0004130       0.000893 1.003
+    ## beta[1] 0.1043 0.08281 0.1852 0.0006761       0.001903 1.007
+    ## beta[2] 1.1858 0.05122 0.1145 0.0004182       0.001179 1.006
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.4611 0.5520 0.5998 0.6466 0.7319
-    ## beta[2] 0.8236 0.8882 0.9223 0.9568 1.0218
+    ##             2.5%     25%    50%    75%  97.5%
+    ## beta[1] -0.05958 0.04755 0.1059 0.1614 0.2625
+    ## beta[2]  1.08562 1.15095 1.1856 1.2202 1.2860
 
 ``` r
 plot(Poisson.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-19-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-2.png)<!-- -->
 
 ## Why use MCMC based Bayesian and data cloning?
 
