@@ -270,6 +270,7 @@ dat = list(Y=Y, X=X, n=n)
 Occ.Bayes = jags.fit(data=dat, params="beta", model=Occ.model)
 summary(Occ.Bayes)
 plot(Occ.Bayes)
+pairs(Occ.Bayes)
 ```
 
 Now we modify this to get the MLE using data cloning.
@@ -307,6 +308,7 @@ Occ.DC = dc.fit(data=dat, params="beta", model=Occ.model_dc,
   n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 summary(Occ.DC)
 plot(Occ.DC)
+pairs(Occ.DC)
 ```
 
 We hope you can see the pattern in how we are changing the prototype model function and the data function. If we want to do a Normal linear regression and Poisson regression we can modify the regression program above easily.
@@ -346,6 +348,7 @@ dat = list(Y=Y, X=X, n=n)
 Normal.Bayes = jags.fit(data=dat, params=c("beta","prec.e"), model=Normal.model)
 summary(Normal.Bayes)
 plot(Normal.Bayes)
+pairs(Normal.Bayes)
 
 # MLE using data cloning.
 Normal.model_dc = function(){
@@ -370,6 +373,7 @@ Normal.DC = dc.fit(data=dat, params=c("beta","prec.e"), model=Normal.model_dc,
   n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 summary(Normal.DC)
 plot(Normal.DC)
+pairs(Normal.DC)
 ```
 
 ### Poisson log-link regression
@@ -405,6 +409,7 @@ dat = list(Y=Y, X=X, n=n)
 Poisson.Bayes = jags.fit(data=dat, params="beta", model=Poisson.model)
 summary(Poisson.Bayes)
 plot(Poisson.Bayes)
+pairs(Poisson.Bayes)
 
 # MLE using data cloning
 Poisson.model_dc = function(){
@@ -428,6 +433,7 @@ Poisson.DC = dc.fit(data=dat, params="beta", model=Poisson.model_dc,
   n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 summary(Poisson.DC)
 plot(Poisson.DC)
+pairs(Poisson.DC)
 ```
 
 ## Why use MCMC based Bayesian and data cloning?
