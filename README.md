@@ -20,9 +20,13 @@ This is a 4-hour long hybrid (in-person and online) event:
 
 ## Sponsors
 
-[![R Consortium](https://www.r-consortium.org/wp-content/uploads/sites/13/2016/09/RConsortium_Horizontal_Pantone.png)](https://www.r-consortium.org/)
+<img src="https://www.r-consortium.org/wp-content/uploads/sites/13/2016/09/RConsortium_Horizontal_Pantone.png" align="left" width="200px" style="padding-right:10px;" alt="R Consortium logo" />
 
-[![Analythium](https://github.com/analythium/assets/raw/master/docs/marks/word-mark-dark-wide.png)](https://analythium.io/)
+Meetup fees, publicity.
+
+<img src="https://github.com/analythium/assets/raw/master/docs/marks/word-mark-dark-wide.png" align="left" width="200px" style="padding-right:10px;" alt="Analythium logo" />
+
+Conferencing, catering.
 
 ## Synopsis
 
