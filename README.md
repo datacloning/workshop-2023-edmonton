@@ -22,6 +22,10 @@ Participants are expected to know the basics of R programming and regression tec
 
 At the end of the workshop, you will have a good idea about why everyone is not a Bayesian, how to use Bayesian techniques for frequentist inference, how to critically diagnose identifiability issues, and how to make likelihood-based inference for (almost) any hierarchical modeling case.
 
+| Topic    | Links |
+| -------- | ------- |
+| Preliminaries  | [Markdown](./prior/statistical-and-computational-preliminaries.md)  |
+
 ## References:
 
 Lele, S.R., B. Dennis and F. Lutscher, 2007. Data cloning: easy maximum likelihood estimation for complex ecological models using Bayesian Markov chain Monte Carlo methods. Ecology Letters 10, 551-563. [DOI 10.1111/j.1461-0248.2007.01047.x­](https://doi.org/10.1111/j.1461-0248.2007.01047.x)
@@ -31,3 +35,7 @@ Lele, S. R., Nadeem, K., and Schmuland, B., 2010. Estimability and likelihood in
 Solymos, P., 2010. dclone: Data Cloning in R. The R Journal 2(2), 29-37. URL <https://journal.r-project.org/archive/2010/RJ-2010-011/RJ-2010-011.pdf>
 
 See PDFs in the [docs](./docs/) folder.
+
+## License
+
+[Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/)
