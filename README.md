@@ -25,8 +25,9 @@ At the end of the workshop, you will have a good idea about why everyone is not 
 | Topic    | Links |
 | -------- | ------- |
 | Preliminaries  | [Notes](./prior/), [App](./app/)  |
+| References  | [PDF files](./docs/)  |
 
-## References:
+## References
 
 Lele, S.R., B. Dennis and F. Lutscher, 2007. Data cloning: easy maximum likelihood estimation for complex ecological models using Bayesian Markov chain Monte Carlo methods. Ecology Letters 10, 551-563. [DOI 10.1111/j.1461-0248.2007.01047.x­](https://doi.org/10.1111/j.1461-0248.2007.01047.x)
 
