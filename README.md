@@ -24,19 +24,19 @@ At the end of the workshop, you will have a good idea about why everyone is not 
 
 | Topic    | Links |
 | -------- | ------- |
+| Setup  | [Instructions](setup.md)  |
 | Preliminaries  | [Notes](./prior/), [App](./app/)  |
 | References  | [PDF files](./docs/)  |
 
-## References
-
-Lele, S.R., B. Dennis and F. Lutscher, 2007. Data cloning: easy maximum likelihood estimation for complex ecological models using Bayesian Markov chain Monte Carlo methods. Ecology Letters 10, 551-563. [DOI 10.1111/j.1461-0248.2007.01047.x­](https://doi.org/10.1111/j.1461-0248.2007.01047.x)
-
-Lele, S. R., Nadeem, K., and Schmuland, B., 2010. Estimability and likelihood inference for generalized linear mixed models using data cloning. Journal of the American Statistical Association 105, 1617-1625. [DOI 10.1198/jasa.2010.tm09757­](https://doi.org/10.1198/jasa.2010.tm09757­)
-
-Solymos, P., 2010. dclone: Data Cloning in R. The R Journal 2(2), 29-37. URL <https://journal.r-project.org/archive/2010/RJ-2010-011/RJ-2010-011.pdf>
-
-See PDFs in the [docs](./docs/) folder.
-
 ## License
 
+The course material is shared under the 
 [Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/)
+license. In publications, please use the following citations to refer to the workshop, theory, and software implementation:
+
+- Lele, S. R., and Solymos, P., 2023. Data Cloning Workshop - Hierarchical Models Made Easy. April 13, 2023. URL <https://github.com/datacloning/workshop-2023-edmonton>
+- Lele, S.R., B. Dennis and F. Lutscher, 2007. Data cloning: easy maximum likelihood estimation for complex ecological models using Bayesian Markov chain Monte Carlo methods. Ecology Letters 10, 551-563. DOI 10.1111/j.1461-0248.2007.01047.x­
+- Lele, S. R., Nadeem, K., and Schmuland, B., 2010. Estimability and likelihood inference for generalized linear mixed models using data cloning. Journal of the American Statistical Association 105, 1617-1625. DOI 10.1198/jasa.2010.tm09757­
+- Solymos, P., 2010. dclone: Data Cloning in R. The R Journal 2(2), 29-37. URL https://journal.r-project.org/archive/2010/RJ-2010-011/RJ-2010-011.pdf
+
+For software license, please refer to the corresponding packages used during the workshop. JAGS, rjags, R2WinBUGS, and dclone are all licensed under [GPL-2](https://cran.r-project.org/web/licenses/GPL-2).
