@@ -9,12 +9,12 @@ output:
 
 ## Introduction
 
-In the first part of the course, we will go over some statistical preliminaries and corrresponding computational aspects. We will learn:
+In the first part of the course, we will go over some statistical preliminaries and corresponding computational aspects. We will learn:
 
 1. To write down a likelihood function
 2. Meaning of the likelihood function
 3. Meaning of the Maximum likelihood estimator, difference between a parameter, an estimator and an estimate
-4. Good properties of an estimator: Consistency, Asymptotic normality, Unbiasedness, Mean squared error
+4. Good properties of an estimator: Consistency, Asymptotic normality, Unbiasedness, low Mean squared error
 5. Frequentist paradigm and quantification of uncertainty
 6. How to use Fisher information for an approximate quantification of uncertainty
 7. Motivation for the Bayesian paradigm
@@ -27,76 +27,65 @@ In the first part of the course, we will go over some statistical preliminaries 
 
 Let us start with an occupancy study. Suppose we have a site that is being considered for development. There is a species of interest that might get affected by this development. Hence we need to study what proportion of the area is occupied by the species of interest. If this proportion is not very large, we may go ahead with the development. 
 
-Suppose we divide the site in several equal area cells. Suppose all cells have similar habitats (identical). Further we assume that occupancy of one cell does not affect occupancy of other quadrats (independence). Let $N$ be the total number of cells.
+Suppose we divide the site in several equal-area cells. Suppose all cells have similar habitats (_identical_). Further we assume that occupancy of one cell does not affect occupancy of other quadrats (_independence_). Let $N$ be the total number of cells.
 
-Let $Y_i$ be the occupancy status of the i-th quadrat. This is unknown and hence is a random variable. It takes values in ${0,1}$, 0 meaning unoccupied and 1 meaning occupied. This is a Bernoulli random variable. We denote this by $Y_{i}\sim Bernoulli(\phi)$. The random variable $Y$ takes value 1 with probability $\phi$. This is the probability of occupancy. The value of $\phi$ is unknown. This is the parameter of the distribution. 
+Let $Y_i$ be the occupancy status of the _i_-th quadrat. This is unknown and hence is a random variable. It takes values in (0,1), 0 meaning unoccupied and 1 meaning occupied. This is a _Bernoulli_ random variable. We denote this by $Y_{i}\sim Bernoulli(\phi)$. The random variable $Y$ takes value 1 with probability $\phi$. This is the probability of occupancy. The value of $\phi$ is unknown. This is the parameter of the distribution. 
 
-Suppose we visit $n$, a subset, of these cells. These are selected using simple random sampling without replacement. The observations are denoted by $y_1,y_2,y_3,...,y_n$. We can use these to infer about the unknown parameter $\phi$. The main tool for such inductive inference (data to population and *not* hypothesis to prediction) is the likelihood function.
+Suppose we visit $n$, a subset, of these cells. These are selected using simple random sampling without replacement. The observations are denoted by $y_1,y_2,y_3,...,y_n$. We can use these to infer about the unknown parameter $\phi$. The main tool for such inductive inference (data to population and _not_ hypothesis to prediction) is the _likelihood function_.
 
 ### The likelihood function
 
-Suppose the observed data are ${0,1,1,0,0}. Then we can compute the probabiity of observing these data under various values of the parameter $\phi$ (assuming independent, identically distributed Bernoulli random variables). It can be written as:
+Suppose the observed data are (0,1,1,0,0). Then we can compute the probabiity of observing these data under various values of the parameter $\phi$ (assuming independent, identically distributed Bernoulli random variables). It can be written as:
 $L(\phi;y_{1},y_{2},...,y_{n})={\prod}P(y_{i};\phi)={\prod}\phi^{y_{i}}(1-\phi)^{1-y_{i}}$
 
-Notice that this is a function of the parameter $\phi$ and the data are fixed. The likelihood function or equivalently the log-likelihood function quantifies the *relative* support for different values of the parameters. Hence only the likelihood ratio function is meaningful. 
+Notice that this is a function of the parameter $\phi$ and the data are fixed. The likelihood function or equivalently the log-likelihood function quantifies the _relative_ support for different values of the parameters. Hence only the likelihood ratio function is meaningful. 
 
 ### Maximum likelihood estimator
 
 A natural approach to estimation (inference) of $\phi$ is to choose the value that is better supported than any other value in the parameter space $(0,1)$. This is called the maximum likelihood estimator. We can show that this turns out to be:
-\[
-\hat{\phi}=\frac{1}{n}\sum y_{i}
-\]
-This is called an 'estimate'. This is a fixed quantity because the data are observed and hence not random. 
+$\hat{\phi}=\frac{1}{n}\sum y_{i}$
+This is called an _estimate_. This is a fixed quantity because the data are observed and hence not random. 
 
 ### Quantification of uncertainty
 
-As scientists, would you stop at reporting this? I suspect not. If this estimate is large,say 0.85, the developer is going to say 'you just got lucky (or, worse, you cheated) with your particular sample'. A natural question to ask then is 'how different this estimate would have been if someone else had conducted the experiment?'. In this case, the 'experiment to be repeated' is fairly uncontroversial. We take another simple random sample without replacement from the study area. However, that is not always the case as we will see when we deal with the regression model. 
+As scientists, would you stop at reporting this? I suspect not. If this estimate is large, say 0.85, the developer is going to say 'you just got lucky (or, worse, you cheated) with your particular sample'. A natural question to ask then is 'how different this estimate would have been if someone else had conducted the experiment?'. In this case, the 'experiment to be repeated' is fairly uncontroversial. We take another simple random sample without replacement from the study area. However, that is not always the case as we will see when we deal with the regression model. 
 
-Sampling distribution is the distribution of the estimates that one would have obtained had one conducted these replicate experiments. It is possible to get an approximation to this sampling distribution in a very general fashion if we use the method of maximum likelihood estimator. In many situations, it can be shown that the sampling distribution is:
-\[
-\hat{\phi}\sim N(\phi,\frac{1}{n}I^{-1}(\phi))
-\]
-where \[
-I(\phi)=-\frac{1}{n}\sum\frac{d^2}{d^2\phi}logL(\phi;{y})
-\]
-This is also called the Hessian matrix or the curvature matrix of the log-likelihood function. Higher the curvature, less variable are the estimates from one experiment to other. Hence the resultant 'estimate' is considered highly reliable. 
+The sampling distribution is the distribution of the estimates that one would have obtained had one conducted these replicate experiments. It is possible to get an approximation to this sampling distribution in a very general fashion if we use the method of maximum likelihood estimator. In many situations, it can be shown that the sampling distribution is 
+$\hat{\phi}\sim N(\phi,\frac{1}{n}I^{-1}(\phi))$
+where 
+$I(\phi)=-\frac{1}{n}\sum\frac{d^2}{d^2\phi}logL(\phi;{y})$
+
+This is also called the Hessian matrix or the curvature matrix of the log-likelihood function. The higher the curvature, the less variable are the estimates from one experiment to other. Hence the resultant 'estimate' is considered highly reliable. 
 
 ### 95% Confidence interval
 
-This is just a set of values that covers the estimates from 95% of the experiments. The experiments are not actually replicated and hence this simply tells us what the various outcomes could be. Our decisions could be based on this variation *as long as we all agree on the experiment that could be replicated*. We are simply covering our bases against the various outcomes and protect ourselves from future challenges. If we use the maximum likelihood estimator, we can obtain this as:
-\[
-\hat{\phi}-\frac{1.96}{n}\sqrt{I^{-1}(\hat{\phi})},\hat{\phi}+\frac{1.96}{n}\sqrt{I^{-1}(\hat{\phi})}
-\]
+This is just a set of values that covers the estimates from 95% of the experiments. The experiments are not actually replicated and hence this simply tells us what the various outcomes could be. Our decisions could be based on this variation _as long as we all agree on the experiment that could be replicated_. We are simply covering our bases against the various outcomes and protect ourselves from future challenges. If we use the maximum likelihood estimator, we can obtain this as:
+$\hat{\phi}-\frac{1.96}{n}\sqrt{I^{-1}(\hat{\phi})},\hat{\phi}+\frac{1.96}{n}\sqrt{I^{-1}(\hat{\phi})}$
 You will notice that as we increase the sample size, the width of this interval converges to zero. That is, as we increase the sample size, the MLE converges to the true parameter value. This is called the 'consistency' of an estimator. This is an essential property of any statistical inferential procedure.
-
-Note: These are extremely loose statements. For proper mathematical statements, you can see our 'future' book. 
 
 ## Bayesian paradigm
 
-All the above statements seem logical but fake at the same time! No one repeats the same experiment (although replication consistency is an essential scientific requirement)! What if we have time series? We can never replicate a time series. So then should we simply take the estimated value *prima facie*? That also seems incorrect scientifically. So where is the uncertainty in our mind coming from? According to the Bayesian paradigm, it arises because of our 'personal' uncertainty about the parameter values. 
+All the above statements seem logical but fake at the same time! No one repeats the same experiment (although replication consistency is an essential scientific requirement). What if we have time series? We can never replicate a time series. So then should we simply take the estimated value _prima facie_? That also seems incorrect scientifically. So where is the uncertainty in our mind coming from? According to the Bayesian paradigm, it arises because of our 'personal' uncertainty about the parameter values. 
 
-*Prior distribution*: Suppose we have some idea about what values of occupancy are more likely than others *before* any data are collected. This can be quantified as a probability distribution on the parameter space $(0,1)$. This distribution can be anything, unimodal or bimodal or even multimodal! Let us denote this by $\pi(\phi)$. How do we change this *after* we observe the data? 
+**Prior distribution**: Suppose we have some idea about what values of occupancy are more likely than others _before_ any data are collected. This can be quantified as a probability distribution on the parameter space (0,1). This distribution can be anything, unimodal or bimodal or even multimodal! Let us denote this by $\pi(\phi)$. How do we change this _after_ we observe the data? 
 
-*Posterior distribution* This is the quantification of uncertainty *after* we observe the data. Usually observing the data decreases our uncertainty, although it is not guaranteed to be the case. The posterior distribution is obtained by:
-\[
-\pi(\phi|y)=\frac{L(\phi;y)\pi(\phi)}{\int L(\phi;d\phi y)\pi(\phi)}
-\]
+**Posterior distribution** This is the quantification of uncertainty _after_ we observe the data. Usually observing the data decreases our uncertainty, although it is not guaranteed to be the case. The posterior distribution is obtained by:
+$\pi(\phi|y)=\frac{L(\phi;y)\pi(\phi)}{\int L(\phi;d\phi y)\pi(\phi)}$
+
 
 ### Credible interval
 
 This is obtained by using the percentiles of the posterior distribution. 
 
-Notice a few things here.
+Notice a few things here:
 
-1. This involves an integral in the denominator. Depending on how many parameters (unknowns) are in the model, this can be a large dimensional integral. Imagine a regression model with 5 covariates. This integral will be 6 dimensional (add one for the variance). 
-2. Data are fixed. We do not need to replicate the experiment. The uncertainty is completely in the mind of the researcher. 
-3. Different researchers might have different prior uncertainties. This will lead to different posterior uncertainties. Hence this is a subjective or personal quantification of uncertainty. It is not transferable from one researcher to another. 
+1. This involves an integral in the denominator. Depending on how many parameters (unknowns) are in the model, this can be a large dimensional integral. Imagine a regression model with 5 covariates. This integral will be 6 dimensional (add one for the variance).
+2. Data are fixed. We do not need to replicate the experiment. The uncertainty is completely in the mind of the researcher.
+3. Different researchers might have different prior uncertainties. This will lead to different posterior uncertainties. Hence this is a subjective or personal quantification of uncertainty. It is not transferable from one researcher to another.
 
-An interesting result follows, however. As we increase the samples size, the Bayesian posterior, for ANY prior, converges to the distribution that looks very much like the frequentist sampling distribution of the MLE. That is, 
-\[
-\pi(\phi|y)\thickapprox N(\hat{\phi},\frac{1}{n}I^{-1}(\hat{\phi}))
-\]
-There are subtle differences that we are going to ignore here. Qualitatively, what it says is that for large sample size,
+An interesting result follows. As we increase the samples size, the Bayesian posterior, for ANY prior, converges to the distribution that looks very much like the frequentist sampling distribution of the MLE. That is,
+$\pi(\phi|y)\thickapprox N(\hat{\phi},\frac{1}{n}I^{-1}(\hat{\phi}))$
+There are subtle differences that we are going to ignore here. Qualitatively, what this says is that for large sample size:
 
 1. Posterior mean and the MLE are similar 
 2. Posterior variance is similar to the inverse of the Hessian matrix. 
@@ -109,6 +98,8 @@ Hence credible interval and confidence intervals will be indistinguishable for l
 
 We now show how one can compute the posterior distribution for any choice of the prior distribution without analytically calculating the integral in the denominator. We will generate the data under the Bernoulli model. You can change the parameters as you wish when you run the code.
 
+Simulate a simple data set with 30 observations:
+
 ```{r}
 library(dclone)
 
@@ -116,56 +107,66 @@ phi.true = 0.3
 n = 30
 Y = rbinom(n,1,phi.true)
 
-# Analytical MLE
-MLE.est = sum(Y)/n    
+table(Y)
+```
 
-# Bayesian inference using JAGS and dclone
+Analytical MLE:
 
-# Step 1: WE need to define the model function. This is the critical component. 
+```{r}
+MLE.est = sum(Y)/n
+```
 
+### Bayesian inference
+
+We will use the [JAGS](https://mcmc-jags.sourceforge.io/) program and the [dclone](https://CRAN.R-project.org/package=dclone) R package.
+
+First, we need to define the model function. This is the critical component. 
+
+```{r}
 Occ.model = function(){
   # Likelihood 
   for (i in 1:n){
-    Y[i] ~ dbin(phi_occ,1)
+    Y[i] ~ dbin(phi_occ, 1)
   }
   # Prior
-  phi_occ ~ dbeta(1,1)
+  phi_occ ~ dbeta(1, 1)
 }
+```
 
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
+Second, we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
 
-dat = list(Y=Y,n=n)
-Occ.Bayes = jags.fit(dat,"phi_occ",Occ.model)
+```{r}
+dat = list(Y=Y, n=n)
+Occ.Bayes = jags.fit(data=dat, params="phi_occ", model=Occ.model)
 summary(Occ.Bayes)
 plot(Occ.Bayes)
 ```
 
-This was quite easy. Now we use data cloning to compute the MLE and its variance using MCMC. 
+This was quite easy. Now we use data cloning to compute the MLE and its variance using MCMC.
 
 ## Data cloning in a nutshell
 
-As you all know, at least in this simple situation, we can write down the likelihood function analytically. We can also use calculus and/or numerical optimization such as the 'optim' function in R to get the location of the maximum and its Hessian matrix. But suppose we do not want to go through all of that and instead want to use the MCMC algorithm. Why? Because it is easy and can be generalized to hierarchical models. 
+As you all know, at least in this simple situation, we can write down the likelihood function analytically. We can also use calculus and/or numerical optimization such as the `optim()` function in R to get the location of the maximum and its Hessian matrix. But suppose we do not want to go through all of that and instead want to use the MCMC algorithm. Why? Because it is easy and can be generalized to more complex hierarchical models.
 
-Earlier we noted that as we increase the sample size, the Bayesian posterior converges to the sampling distribution of the MLE. We, obviously, cannot increase the sample size. The data are given to us. Data cloning conducts a computational trick to increase the sample size. We clone the data! 
+Earlier we noted that as we increase the sample size, the Bayesian posterior converges to the sampling distribution of the MLE. We, obviously, cannot increase the sample size. The data are given to us. Data cloning conducts a computational trick to increase the sample size. We clone the data!
 
-Imagine a sequence of K independent researchers. 
+Imagine a sequence of _K_ independent researchers. 
 
-Step 1: First researcher has data $y_1,y_2,...,y_n$. They use their own prior and obtain the posterior distribution.
-
-Step 2: Second researcher goes out and gets their own data. It just so happens that they observed the same exact locations as the first researcher. Being a good Bayesian, they use the posterior of the first researcher as their prior (knowledge accumulation). The posterior for the second researcher is given by:
-
-Step K: The K-th researcher also obtains the same data but uses the posterior at the (K-1) step as their prior.
+- Step 1: First researcher has data $y_1,y_2,...,y_n$. They use their own prior and obtain the posterior distribution.
+- Step 2: Second researcher goes out and gets their own data. It just so happens that they observed the same exact locations as the first researcher. Being a good Bayesian, they use the posterior of the first researcher as their prior (knowledge accumulation).
+- Step K: The K-th researcher also obtains the same data but uses the posterior at the (K-1) step as their prior.
 
 What is happening with these sequential posterior distributions?
 
-*The posterior distribution is converging to a single point; a degenerate distribution. This is identical to the MLE!*
+**The posterior distribution is converging to a single point; a degenerate distribution. This is identical to the MLE!**
 
 1. As we increase the number of clones, the mean of the posterior distributions converges to the MLE.
 2. The variance of the posterior distribution converges to 0.
 3. If we scale the posterior distribution with the number of clones (that is, multiply the posterior variance by the number of clones), it is identical to the inverse of the Fisher information matrix. 
 
+You can play with the number of clones and see the effect on the posterior distribution using this [Shiny app](https://psolymos.shinyapps.io/dcapps/) ([R code for the app](../app/))
 
-We do not need to implement this procedure sequentially. The matrix  of these K datasets is of dimension $(n,K)$ with identical columns. 
+We do not need to implement this procedure sequentially. The matrix  of these K datasets is of dimension (_n_,_K_) with identical columns. 
 
 $\left[\begin{array}{cccccccccc}
 y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1}\\
@@ -178,28 +179,46 @@ y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5}
 We use the Bayesian procedure to analyze these data. The model function used previously can be used with a minor modification to do this. 
 
 ```{r}
-
 Occ.model.dc = function(){
   # Likelihood 
-  
   for(k in 1:ncl){
-  for (i in 1:n){
-    Y[i,k] ~ dbin(phi_occ,1)
-  }}
+    for (i in 1:n){
+      Y[i,k] ~ dbin(phi_occ, 1)
+    }
+  }
   # Prior
-  phi_occ ~ dbeta(1,1)
+  phi_occ ~ dbeta(1, 1)
 }
+```
 
-# We need to turn the original data into an array. 
-Y = array(Y,c(n,1))
+To match this change in the model, we need to turn the original data into an array.
+
+```{r}
+Y = array(Y, dim=c(n, 1))
 Y = dcdim(Y)
-# Need to add another index 'ncl' for the cloned dimension. It gets multiplied by the number of clones.
-dat = list(Y=Y,n=n,ncl=1)
-dclone(Y,2)
-dclone(dat,2) 
-# Notice that this changes n also. We do not want that.
-dclone(dat,2, unchanged="n",multiply="ncl")
-Occ.DC = dc.fit(dat,"phi_occ",Occ.model.dc,n.clones=c(1,2,5),unchanged="n",multiply="ncl")
+```
+
+When defining the data, we need to add another index `ncl` for the cloned dimension. It gets multiplied by the number of clones.
+
+```{r}
+dat = list(Y=Y, n=n, ncl=1)
+# 2 clones of the Y array
+dclone(Y, 2)
+# 2 clones of the data list - this is not what we want
+dclone(dat, 2)
+```
+
+Notice that this changes `n` also. We do not want that, we want to keep `n` unchanged.
+
+```{r}
+dclone(dat, 2, unchanged="n", multiply="ncl")
+```
+
+The `dc.fit` function takes the familiar arguments to determine how to clone the data list.
+
+```{r}
+Occ.DC = dc.fit(data=dat, params="phi_occ", model=Occ.model.dc,
+  n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 summary(Occ.DC)
 plot(Occ.DC)
 ```

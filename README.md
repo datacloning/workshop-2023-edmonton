@@ -24,7 +24,7 @@ At the end of the workshop, you will have a good idea about why everyone is not 
 
 | Topic    | Links |
 | -------- | ------- |
-| Preliminaries  | [Markdown](./prior/statistical-and-computational-preliminaries.md)  |
+| Preliminaries  | [Notes](./prior/statistical-and-computational-preliminaries.md), [App](./app/)  |
 
 ## References:
 

@@ -4,14 +4,14 @@ Statistical and computational preliminaries
 ## Introduction
 
 In the first part of the course, we will go over some statistical
-preliminaries and corrresponding computational aspects. We will learn:
+preliminaries and corresponding computational aspects. We will learn:
 
 1.  To write down a likelihood function
 2.  Meaning of the likelihood function
 3.  Meaning of the Maximum likelihood estimator, difference between a
     parameter, an estimator and an estimate
 4.  Good properties of an estimator: Consistency, Asymptotic normality,
-    Unbiasedness, Mean squared error
+    Unbiasedness, low Mean squared error
 5.  Frequentist paradigm and quantification of uncertainty
 6.  How to use Fisher information for an approximate quantification of
     uncertainty
@@ -31,18 +31,17 @@ might get affected by this development. Hence we need to study what
 proportion of the area is occupied by the species of interest. If this
 proportion is not very large, we may go ahead with the development.
 
-Suppose we divide the site in several equal area cells. Suppose all
-cells have similar habitats (identical). Further we assume that
+Suppose we divide the site in several equal-area cells. Suppose all
+cells have similar habitats (*identical*). Further we assume that
 occupancy of one cell does not affect occupancy of other quadrats
-(independence). Let ![N](https://latex.codecogs.com/svg.image?N "N") be
-the total number of cells.
+(*independence*). Let ![N](https://latex.codecogs.com/svg.image?N "N")
+be the total number of cells.
 
 Let ![Y_i](https://latex.codecogs.com/svg.image?Y_i "Y_i") be the
-occupancy status of the i-th quadrat. This is unknown and hence is a
-random variable. It takes values in
-![{0,1}](https://latex.codecogs.com/svg.image?%7B0%2C1%7D "{0,1}"), 0
-meaning unoccupied and 1 meaning occupied. This is a Bernoulli random
-variable. We denote this by
+occupancy status of the *i*-th quadrat. This is unknown and hence is a
+random variable. It takes values in (0,1), 0 meaning unoccupied and 1
+meaning occupied. This is a *Bernoulli* random variable. We denote this
+by
 ![Y\_{i}\sim Bernoulli(\phi)](https://latex.codecogs.com/svg.image?Y_%7Bi%7D%5Csim%20Bernoulli%28%5Cphi%29 "Y_{i}\sim Bernoulli(\phi)").
 The random variable ![Y](https://latex.codecogs.com/svg.image?Y "Y")
 takes value 1 with probability
@@ -58,11 +57,11 @@ without replacement. The observations are denoted by
 We can use these to infer about the unknown parameter
 ![\phi](https://latex.codecogs.com/svg.image?%5Cphi "\phi"). The main
 tool for such inductive inference (data to population and *not*
-hypothesis to prediction) is the likelihood function.
+hypothesis to prediction) is the *likelihood function*.
 
 ### The likelihood function
 
-Suppose the observed data are \${0,1,1,0,0}. Then we can compute the
+Suppose the observed data are (0,1,1,0,0). Then we can compute the
 probabiity of observing these data under various values of the parameter
 ![\phi](https://latex.codecogs.com/svg.image?%5Cphi "\phi") (assuming
 independent, identically distributed Bernoulli random variables). It can
@@ -84,16 +83,14 @@ space
 ![(0,1)](https://latex.codecogs.com/svg.image?%280%2C1%29 "(0,1)"). This
 is called the maximum likelihood estimator. We can show that this turns
 out to be:
-
 ![\hat{\phi}=\frac{1}{n}\sum y\_{i}](https://latex.codecogs.com/svg.image?%5Chat%7B%5Cphi%7D%3D%5Cfrac%7B1%7D%7Bn%7D%5Csum%20y_%7Bi%7D "\hat{\phi}=\frac{1}{n}\sum y_{i}")
-
-This is called an ‘estimate’. This is a fixed quantity because the data
+This is called an *estimate*. This is a fixed quantity because the data
 are observed and hence not random.
 
 ### Quantification of uncertainty
 
 As scientists, would you stop at reporting this? I suspect not. If this
-estimate is large,say 0.85, the developer is going to say ‘you just got
+estimate is large, say 0.85, the developer is going to say ‘you just got
 lucky (or, worse, you cheated) with your particular sample’. A natural
 question to ask then is ‘how different this estimate would have been if
 someone else had conducted the experiment?’. In this case, the
@@ -102,22 +99,19 @@ simple random sample without replacement from the study area. However,
 that is not always the case as we will see when we deal with the
 regression model.
 
-Sampling distribution is the distribution of the estimates that one
+The sampling distribution is the distribution of the estimates that one
 would have obtained had one conducted these replicate experiments. It is
 possible to get an approximation to this sampling distribution in a very
 general fashion if we use the method of maximum likelihood estimator. In
-many situations, it can be shown that the sampling distribution is:
-
+many situations, it can be shown that the sampling distribution is
 ![\hat{\phi}\sim N(\phi,\frac{1}{n}I^{-1}(\phi))](https://latex.codecogs.com/svg.image?%5Chat%7B%5Cphi%7D%5Csim%20N%28%5Cphi%2C%5Cfrac%7B1%7D%7Bn%7DI%5E%7B-1%7D%28%5Cphi%29%29 "\hat{\phi}\sim N(\phi,\frac{1}{n}I^{-1}(\phi))")
-
 where
-
 ![I(\phi)=-\frac{1}{n}\sum\frac{d^2}{d^2\phi}logL(\phi;{y})](https://latex.codecogs.com/svg.image?I%28%5Cphi%29%3D-%5Cfrac%7B1%7D%7Bn%7D%5Csum%5Cfrac%7Bd%5E2%7D%7Bd%5E2%5Cphi%7DlogL%28%5Cphi%3B%7By%7D%29 "I(\phi)=-\frac{1}{n}\sum\frac{d^2}{d^2\phi}logL(\phi;{y})")
 
 This is also called the Hessian matrix or the curvature matrix of the
-log-likelihood function. Higher the curvature, less variable are the
-estimates from one experiment to other. Hence the resultant ‘estimate’
-is considered highly reliable.
+log-likelihood function. The higher the curvature, the less variable are
+the estimates from one experiment to other. Hence the resultant
+‘estimate’ is considered highly reliable.
 
 ### 95% Confidence interval
 
@@ -128,51 +122,43 @@ be based on this variation *as long as we all agree on the experiment
 that could be replicated*. We are simply covering our bases against the
 various outcomes and protect ourselves from future challenges. If we use
 the maximum likelihood estimator, we can obtain this as:
-
 ![\hat{\phi}-\frac{1.96}{n}\sqrt{I^{-1}(\hat{\phi})},\hat{\phi}+\frac{1.96}{n}\sqrt{I^{-1}(\hat{\phi})}](https://latex.codecogs.com/svg.image?%5Chat%7B%5Cphi%7D-%5Cfrac%7B1.96%7D%7Bn%7D%5Csqrt%7BI%5E%7B-1%7D%28%5Chat%7B%5Cphi%7D%29%7D%2C%5Chat%7B%5Cphi%7D%2B%5Cfrac%7B1.96%7D%7Bn%7D%5Csqrt%7BI%5E%7B-1%7D%28%5Chat%7B%5Cphi%7D%29%7D "\hat{\phi}-\frac{1.96}{n}\sqrt{I^{-1}(\hat{\phi})},\hat{\phi}+\frac{1.96}{n}\sqrt{I^{-1}(\hat{\phi})}")
-
 You will notice that as we increase the sample size, the width of this
 interval converges to zero. That is, as we increase the sample size, the
 MLE converges to the true parameter value. This is called the
 ‘consistency’ of an estimator. This is an essential property of any
 statistical inferential procedure.
 
-Note: These are extremely loose statements. For proper mathematical
-statements, you can see our ‘future’ book.
-
 ## Bayesian paradigm
 
 All the above statements seem logical but fake at the same time! No one
 repeats the same experiment (although replication consistency is an
-essential scientific requirement)! What if we have time series? We can
+essential scientific requirement). What if we have time series? We can
 never replicate a time series. So then should we simply take the
 estimated value *prima facie*? That also seems incorrect scientifically.
 So where is the uncertainty in our mind coming from? According to the
 Bayesian paradigm, it arises because of our ‘personal’ uncertainty about
 the parameter values.
 
-*Prior distribution*: Suppose we have some idea about what values of
+**Prior distribution**: Suppose we have some idea about what values of
 occupancy are more likely than others *before* any data are collected.
 This can be quantified as a probability distribution on the parameter
-space
-![(0,1)](https://latex.codecogs.com/svg.image?%280%2C1%29 "(0,1)"). This
-distribution can be anything, unimodal or bimodal or even multimodal!
-Let us denote this by
+space (0,1). This distribution can be anything, unimodal or bimodal or
+even multimodal! Let us denote this by
 ![\pi(\phi)](https://latex.codecogs.com/svg.image?%5Cpi%28%5Cphi%29 "\pi(\phi)").
 How do we change this *after* we observe the data?
 
-*Posterior distribution* This is the quantification of uncertainty
+**Posterior distribution** This is the quantification of uncertainty
 *after* we observe the data. Usually observing the data decreases our
 uncertainty, although it is not guaranteed to be the case. The posterior
 distribution is obtained by:
-
 ![\pi(\phi\|y)=\frac{L(\phi;y)\pi(\phi)}{\int L(\phi;d\phi y)\pi(\phi)}](https://latex.codecogs.com/svg.image?%5Cpi%28%5Cphi%7Cy%29%3D%5Cfrac%7BL%28%5Cphi%3By%29%5Cpi%28%5Cphi%29%7D%7B%5Cint%20L%28%5Cphi%3Bd%5Cphi%20y%29%5Cpi%28%5Cphi%29%7D "\pi(\phi|y)=\frac{L(\phi;y)\pi(\phi)}{\int L(\phi;d\phi y)\pi(\phi)}")
 
 ### Credible interval
 
 This is obtained by using the percentiles of the posterior distribution.
 
-Notice a few things here.
+Notice a few things here:
 
 1.  This involves an integral in the denominator. Depending on how many
     parameters (unknowns) are in the model, this can be a large
@@ -185,15 +171,13 @@ Notice a few things here.
     subjective or personal quantification of uncertainty. It is not
     transferable from one researcher to another.
 
-An interesting result follows, however. As we increase the samples size,
-the Bayesian posterior, for ANY prior, converges to the distribution
-that looks very much like the frequentist sampling distribution of the
-MLE. That is,
-
+An interesting result follows. As we increase the samples size, the
+Bayesian posterior, for ANY prior, converges to the distribution that
+looks very much like the frequentist sampling distribution of the MLE.
+That is,
 ![\pi(\phi\|y)\thickapprox N(\hat{\phi},\frac{1}{n}I^{-1}(\hat{\phi}))](https://latex.codecogs.com/svg.image?%5Cpi%28%5Cphi%7Cy%29%5Cthickapprox%20N%28%5Chat%7B%5Cphi%7D%2C%5Cfrac%7B1%7D%7Bn%7DI%5E%7B-1%7D%28%5Chat%7B%5Cphi%7D%29%29 "\pi(\phi|y)\thickapprox N(\hat{\phi},\frac{1}{n}I^{-1}(\hat{\phi}))")
-
 There are subtle differences that we are going to ignore here.
-Qualitatively, what it says is that for large sample size,
+Qualitatively, what this says is that for large sample size:
 
 1.  Posterior mean and the MLE are similar
 2.  Posterior variance is similar to the inverse of the Hessian matrix.
@@ -214,6 +198,8 @@ integral in the denominator. We will generate the data under the
 Bernoulli model. You can change the parameters as you wish when you run
 the code.
 
+Simulate a simple data set with 30 observations:
+
 ``` r
 library(dclone)
 ```
@@ -231,26 +217,44 @@ phi.true = 0.3
 n = 30
 Y = rbinom(n,1,phi.true)
 
-# Analytical MLE
-MLE.est = sum(Y)/n    
+table(Y)
+```
 
-# Bayesian inference using JAGS and dclone
+    ## Y
+    ##  0  1 
+    ## 23  7
 
-# Step 1: WE need to define the model function. This is the critical component. 
+Analytical MLE:
 
+``` r
+MLE.est = sum(Y)/n
+```
+
+### Bayesian inference
+
+We will use the [JAGS](https://mcmc-jags.sourceforge.io/) program and
+the [dclone](https://CRAN.R-project.org/package=dclone) R package.
+
+First, we need to define the model function. This is the critical
+component.
+
+``` r
 Occ.model = function(){
   # Likelihood 
   for (i in 1:n){
-    Y[i] ~ dbin(phi_occ,1)
+    Y[i] ~ dbin(phi_occ, 1)
   }
   # Prior
-  phi_occ ~ dbeta(1,1)
+  phi_occ ~ dbeta(1, 1)
 }
+```
 
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
+Second, we need to provide the data to the model and generate random
+numbers from the posterior. We will discuss different options later.
 
-dat = list(Y=Y,n=n)
-Occ.Bayes = jags.fit(dat,"phi_occ",Occ.model)
+``` r
+dat = list(Y=Y, n=n)
+Occ.Bayes = jags.fit(data=dat, params="phi_occ", model=Occ.model)
 ```
 
     ## Registered S3 method overwritten by 'R2WinBUGS':
@@ -281,18 +285,18 @@ summary(Occ.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean             SD       Naive SE Time-series SE 
-    ##      0.3131700      0.0810679      0.0006619      0.0008718 
+    ##      0.2505034      0.0757334      0.0006184      0.0008094 
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##   2.5%    25%    50%    75%  97.5% 
-    ## 0.1669 0.2554 0.3091 0.3663 0.4802
+    ## 0.1195 0.1962 0.2447 0.2994 0.4134
 
 ``` r
 plot(Occ.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 This was quite easy. Now we use data cloning to compute the MLE and its
 variance using MCMC.
@@ -301,11 +305,11 @@ variance using MCMC.
 
 As you all know, at least in this simple situation, we can write down
 the likelihood function analytically. We can also use calculus and/or
-numerical optimization such as the ‘optim’ function in R to get the
+numerical optimization such as the `optim()` function in R to get the
 location of the maximum and its Hessian matrix. But suppose we do not
 want to go through all of that and instead want to use the MCMC
-algorithm. Why? Because it is easy and can be generalized to
-hierarchical models.
+algorithm. Why? Because it is easy and can be generalized to more
+complex hierarchical models.
 
 Earlier we noted that as we increase the sample size, the Bayesian
 posterior converges to the sampling distribution of the MLE. We,
@@ -313,25 +317,22 @@ obviously, cannot increase the sample size. The data are given to us.
 Data cloning conducts a computational trick to increase the sample size.
 We clone the data!
 
-Imagine a sequence of K independent researchers.
+Imagine a sequence of *K* independent researchers.
 
-Step 1: First researcher has data
-![y_1,y_2,...,y_n](https://latex.codecogs.com/svg.image?y_1%2Cy_2%2C...%2Cy_n "y_1,y_2,...,y_n").
-They use their own prior and obtain the posterior distribution.
-
-Step 2: Second researcher goes out and gets their own data. It just so
-happens that they observed the same exact locations as the first
-researcher. Being a good Bayesian, they use the posterior of the first
-researcher as their prior (knowledge accumulation). The posterior for
-the second researcher is given by:
-
-Step K: The K-th researcher also obtains the same data but uses the
-posterior at the (K-1) step as their prior.
+- Step 1: First researcher has data
+  ![y_1,y_2,...,y_n](https://latex.codecogs.com/svg.image?y_1%2Cy_2%2C...%2Cy_n "y_1,y_2,...,y_n").
+  They use their own prior and obtain the posterior distribution.
+- Step 2: Second researcher goes out and gets their own data. It just so
+  happens that they observed the same exact locations as the first
+  researcher. Being a good Bayesian, they use the posterior of the first
+  researcher as their prior (knowledge accumulation).
+- Step K: The K-th researcher also obtains the same data but uses the
+  posterior at the (K-1) step as their prior.
 
 What is happening with these sequential posterior distributions?
 
-*The posterior distribution is converging to a single point; a
-degenerate distribution. This is identical to the MLE!*
+**The posterior distribution is converging to a single point; a
+degenerate distribution. This is identical to the MLE!**
 
 1.  As we increase the number of clones, the mean of the posterior
     distributions converges to the MLE.
@@ -340,10 +341,13 @@ degenerate distribution. This is identical to the MLE!*
     (that is, multiply the posterior variance by the number of clones),
     it is identical to the inverse of the Fisher information matrix.
 
+You can play with the number of clones and see the effect on the
+posterior distribution using this [Shiny
+app](https://psolymos.shinyapps.io/dcapps/) ([R code for the
+app](../app/))
+
 We do not need to implement this procedure sequentially. The matrix of
-these K datasets is of dimension
-![(n,K)](https://latex.codecogs.com/svg.image?%28n%2CK%29 "(n,K)") with
-identical columns.
+these K datasets is of dimension (*n*,*K*) with identical columns.
 
 ![\left\[\begin{array}{cccccccccc} y\_{1} & y\_{1} & y\_{1} & y\_{1} & y\_{1} & y\_{1} & y\_{1} & y\_{1} & y\_{1} & y\_{1}\\ y\_{2} & y\_{2} & y\_{2} & y\_{2} & y\_{2} & y\_{2} & y\_{2} & y\_{2} & y\_{2} & y\_{2}\\ y\_{3} & y\_{3} & y\_{3} & y\_{3} & y\_{3} & y\_{3} & y\_{3} & y\_{3} & y\_{3} & y\_{3}\\ y\_{4} & y\_{4} & y\_{4} & y\_{4} & y\_{4} & y\_{4} & y\_{4} & y\_{4} & y\_{4} & y\_{4}\\ y\_{5} & y\_{5} & y\_{5} & y\_{5} & y\_{5} & y\_{5} & y\_{5} & y\_{5} & y\_{5} & y\_{5} \end{array}\right\]](https://latex.codecogs.com/svg.image?%5Cleft%5B%5Cbegin%7Barray%7D%7Bcccccccccc%7D%20y_%7B1%7D%20%26%20y_%7B1%7D%20%26%20y_%7B1%7D%20%26%20y_%7B1%7D%20%26%20y_%7B1%7D%20%26%20y_%7B1%7D%20%26%20y_%7B1%7D%20%26%20y_%7B1%7D%20%26%20y_%7B1%7D%20%26%20y_%7B1%7D%5C%5C%20y_%7B2%7D%20%26%20y_%7B2%7D%20%26%20y_%7B2%7D%20%26%20y_%7B2%7D%20%26%20y_%7B2%7D%20%26%20y_%7B2%7D%20%26%20y_%7B2%7D%20%26%20y_%7B2%7D%20%26%20y_%7B2%7D%20%26%20y_%7B2%7D%5C%5C%20y_%7B3%7D%20%26%20y_%7B3%7D%20%26%20y_%7B3%7D%20%26%20y_%7B3%7D%20%26%20y_%7B3%7D%20%26%20y_%7B3%7D%20%26%20y_%7B3%7D%20%26%20y_%7B3%7D%20%26%20y_%7B3%7D%20%26%20y_%7B3%7D%5C%5C%20y_%7B4%7D%20%26%20y_%7B4%7D%20%26%20y_%7B4%7D%20%26%20y_%7B4%7D%20%26%20y_%7B4%7D%20%26%20y_%7B4%7D%20%26%20y_%7B4%7D%20%26%20y_%7B4%7D%20%26%20y_%7B4%7D%20%26%20y_%7B4%7D%5C%5C%20y_%7B5%7D%20%26%20y_%7B5%7D%20%26%20y_%7B5%7D%20%26%20y_%7B5%7D%20%26%20y_%7B5%7D%20%26%20y_%7B5%7D%20%26%20y_%7B5%7D%20%26%20y_%7B5%7D%20%26%20y_%7B5%7D%20%26%20y_%7B5%7D%20%5Cend%7Barray%7D%5Cright%5D "\left[\begin{array}{cccccccccc} y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1} & y_{1}\\ y_{2} & y_{2} & y_{2} & y_{2} & y_{2} & y_{2} & y_{2} & y_{2} & y_{2} & y_{2}\\ y_{3} & y_{3} & y_{3} & y_{3} & y_{3} & y_{3} & y_{3} & y_{3} & y_{3} & y_{3}\\ y_{4} & y_{4} & y_{4} & y_{4} & y_{4} & y_{4} & y_{4} & y_{4} & y_{4} & y_{4}\\ y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5} & y_{5} \end{array}\right]")
 
@@ -353,54 +357,64 @@ used previously can be used with a minor modification to do this.
 ``` r
 Occ.model.dc = function(){
   # Likelihood 
-  
   for(k in 1:ncl){
-  for (i in 1:n){
-    Y[i,k] ~ dbin(phi_occ,1)
-  }}
+    for (i in 1:n){
+      Y[i,k] ~ dbin(phi_occ, 1)
+    }
+  }
   # Prior
-  phi_occ ~ dbeta(1,1)
+  phi_occ ~ dbeta(1, 1)
 }
+```
 
-# We need to turn the original data into an array. 
-Y = array(Y,c(n,1))
+To match this change in the model, we need to turn the original data
+into an array.
+
+``` r
+Y = array(Y, dim=c(n, 1))
 Y = dcdim(Y)
-# Need to add another index 'ncl' for the cloned dimension. It gets multiplied by the number of clones.
-dat = list(Y=Y,n=n,ncl=1)
-dclone(Y,2)
+```
+
+When defining the data, we need to add another index `ncl` for the
+cloned dimension. It gets multiplied by the number of clones.
+
+``` r
+dat = list(Y=Y, n=n, ncl=1)
+# 2 clones of the Y array
+dclone(Y, 2)
 ```
 
     ##       clone.1 clone.2
     ##  [1,]       0       0
-    ##  [2,]       0       0
+    ##  [2,]       1       1
     ##  [3,]       0       0
     ##  [4,]       0       0
     ##  [5,]       0       0
     ##  [6,]       0       0
-    ##  [7,]       0       0
-    ##  [8,]       1       1
-    ##  [9,]       1       1
+    ##  [7,]       1       1
+    ##  [8,]       0       0
+    ##  [9,]       0       0
     ## [10,]       0       0
-    ## [11,]       1       1
-    ## [12,]       0       0
-    ## [13,]       0       0
-    ## [14,]       1       1
-    ## [15,]       1       1
-    ## [16,]       0       0
-    ## [17,]       1       1
+    ## [11,]       0       0
+    ## [12,]       1       1
+    ## [13,]       1       1
+    ## [14,]       0       0
+    ## [15,]       0       0
+    ## [16,]       1       1
+    ## [17,]       0       0
     ## [18,]       0       0
     ## [19,]       0       0
     ## [20,]       0       0
     ## [21,]       0       0
-    ## [22,]       1       1
+    ## [22,]       0       0
     ## [23,]       0       0
     ## [24,]       0       0
     ## [25,]       1       1
-    ## [26,]       0       0
+    ## [26,]       1       1
     ## [27,]       0       0
     ## [28,]       0       0
     ## [29,]       0       0
-    ## [30,]       1       1
+    ## [30,]       0       0
     ## attr(,"n.clones")
     ## [1] 2
     ## attr(,"n.clones")attr(,"method")
@@ -409,41 +423,42 @@ dclone(Y,2)
     ## [1] TRUE
 
 ``` r
-dclone(dat,2) 
+# 2 clones of the data list - this is not what we want
+dclone(dat, 2)
 ```
 
     ## $Y
     ##       clone.1 clone.2
     ##  [1,]       0       0
-    ##  [2,]       0       0
+    ##  [2,]       1       1
     ##  [3,]       0       0
     ##  [4,]       0       0
     ##  [5,]       0       0
     ##  [6,]       0       0
-    ##  [7,]       0       0
-    ##  [8,]       1       1
-    ##  [9,]       1       1
+    ##  [7,]       1       1
+    ##  [8,]       0       0
+    ##  [9,]       0       0
     ## [10,]       0       0
-    ## [11,]       1       1
-    ## [12,]       0       0
-    ## [13,]       0       0
-    ## [14,]       1       1
-    ## [15,]       1       1
-    ## [16,]       0       0
-    ## [17,]       1       1
+    ## [11,]       0       0
+    ## [12,]       1       1
+    ## [13,]       1       1
+    ## [14,]       0       0
+    ## [15,]       0       0
+    ## [16,]       1       1
+    ## [17,]       0       0
     ## [18,]       0       0
     ## [19,]       0       0
     ## [20,]       0       0
     ## [21,]       0       0
-    ## [22,]       1       1
+    ## [22,]       0       0
     ## [23,]       0       0
     ## [24,]       0       0
     ## [25,]       1       1
-    ## [26,]       0       0
+    ## [26,]       1       1
     ## [27,]       0       0
     ## [28,]       0       0
     ## [29,]       0       0
-    ## [30,]       1       1
+    ## [30,]       0       0
     ## attr(,"n.clones")
     ## [1] 2
     ## attr(,"n.clones")attr(,"method")
@@ -465,43 +480,45 @@ dclone(dat,2)
     ## attr(,"n.clones")attr(,"method")
     ## [1] "rep"
 
+Notice that this changes `n` also. We do not want that, we want to keep
+`n` unchanged.
+
 ``` r
-# Notice that this changes n also. We do not want that.
-dclone(dat,2, unchanged="n",multiply="ncl")
+dclone(dat, 2, unchanged="n", multiply="ncl")
 ```
 
     ## $Y
     ##       clone.1 clone.2
     ##  [1,]       0       0
-    ##  [2,]       0       0
+    ##  [2,]       1       1
     ##  [3,]       0       0
     ##  [4,]       0       0
     ##  [5,]       0       0
     ##  [6,]       0       0
-    ##  [7,]       0       0
-    ##  [8,]       1       1
-    ##  [9,]       1       1
+    ##  [7,]       1       1
+    ##  [8,]       0       0
+    ##  [9,]       0       0
     ## [10,]       0       0
-    ## [11,]       1       1
-    ## [12,]       0       0
-    ## [13,]       0       0
-    ## [14,]       1       1
-    ## [15,]       1       1
-    ## [16,]       0       0
-    ## [17,]       1       1
+    ## [11,]       0       0
+    ## [12,]       1       1
+    ## [13,]       1       1
+    ## [14,]       0       0
+    ## [15,]       0       0
+    ## [16,]       1       1
+    ## [17,]       0       0
     ## [18,]       0       0
     ## [19,]       0       0
     ## [20,]       0       0
     ## [21,]       0       0
-    ## [22,]       1       1
+    ## [22,]       0       0
     ## [23,]       0       0
     ## [24,]       0       0
     ## [25,]       1       1
-    ## [26,]       0       0
+    ## [26,]       1       1
     ## [27,]       0       0
     ## [28,]       0       0
     ## [29,]       0       0
-    ## [30,]       1       1
+    ## [30,]       0       0
     ## attr(,"n.clones")
     ## [1] 2
     ## attr(,"n.clones")attr(,"method")
@@ -519,8 +536,12 @@ dclone(dat,2, unchanged="n",multiply="ncl")
     ## attr(,"n.clones")attr(,"method")
     ## [1] "multi"
 
+The `dc.fit` function takes the familiar arguments to determine how to
+clone the data list.
+
 ``` r
-Occ.DC = dc.fit(dat,"phi_occ",Occ.model.dc,n.clones=c(1,2,5),unchanged="n",multiply="ncl")
+Occ.DC = dc.fit(data=dat, params="phi_occ", model=Occ.model.dc,
+  n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 ```
 
     ## 
@@ -577,18 +598,18 @@ summary(Occ.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean      SD DC SD.phi_occ  Naive SE Time-series SE R hat
-    ## phi_occ 0.3027 0.03753       0.08393 0.0003065      0.0003973     1
+    ## phi_occ 0.2368 0.03465       0.07748 0.0002829       0.000355     1
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##   2.5%    25%    50%    75%  97.5% 
-    ## 0.2312 0.2767 0.3018 0.3277 0.3786
+    ## 0.1724 0.2128 0.2354 0.2599 0.3072
 
 ``` r
 plot(Occ.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ## Regression models
 
@@ -653,21 +674,21 @@ summary(Occ.Bayes)
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##             Mean     SD Naive SE Time-series SE
-    ## beta[1] 0.006548 0.3803 0.003105       0.004198
-    ## beta[2] 0.772665 0.4059 0.003314       0.004382
+    ##           Mean     SD Naive SE Time-series SE
+    ## beta[1] 0.8178 0.4411 0.003602       0.004833
+    ## beta[2] 1.2700 0.4435 0.003621       0.005104
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##             2.5%     25%      50%    75%  97.5%
-    ## beta[1] -0.72715 -0.2503 0.003628 0.2582 0.7617
-    ## beta[2]  0.01515  0.4954 0.756365 1.0381 1.6125
+    ##             2.5%    25%    50%   75% 97.5%
+    ## beta[1] -0.01421 0.5134 0.8047 1.105 1.731
+    ## beta[2]  0.48438 0.9570 1.2376 1.552 2.219
 
 ``` r
 plot(Occ.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 # Now we modify this to get the MLE using data cloning.
@@ -747,21 +768,21 @@ summary(Occ.DC)
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##            Mean     SD  DC SD Naive SE Time-series SE R hat
-    ## beta[1] 0.01906 0.1778 0.3976 0.001452       0.001902     1
-    ## beta[2] 0.83672 0.1963 0.4390 0.001603       0.002124     1
+    ##          Mean     SD  DC SD Naive SE Time-series SE R hat
+    ## beta[1] 1.016 0.2275 0.5087 0.001858       0.002740 1.001
+    ## beta[2] 1.476 0.2385 0.5333 0.001947       0.002794 1.002
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##            2.5%      25%    50%    75%  97.5%
-    ## beta[1] -0.3273 -0.09926 0.0174 0.1360 0.3752
-    ## beta[2]  0.4776  0.70193 0.8297 0.9667 1.2413
+    ##           2.5%    25%   50%   75% 97.5%
+    ## beta[1] 0.5803 0.8602 1.010 1.168 1.479
+    ## beta[2] 1.0421 1.3086 1.465 1.632 1.976
 
 ``` r
 plot(Occ.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
 We hope you can see the pattern in how we are changing the prototype
 model function and the data function. If we want to do a Normal linear
@@ -827,22 +848,22 @@ summary(Normal.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean     SD Naive SE Time-series SE
-    ## beta[1] 0.4784 0.1920 0.001568       0.001568
-    ## beta[2] 1.0369 0.2299 0.001877       0.001917
-    ## prec.e  0.9291 0.2397 0.001957       0.002659
+    ## beta[1] 0.5043 0.2038 0.001664       0.001664
+    ## beta[2] 0.9333 0.1940 0.001584       0.001609
+    ## prec.e  0.8297 0.2120 0.001731       0.002477
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.1002 0.3516 0.4765 0.6074 0.8577
-    ## beta[2] 0.5823 0.8887 1.0384 1.1877 1.4856
-    ## prec.e  0.5179 0.7576 0.9116 1.0771 1.4553
+    ## beta[1] 0.1026 0.3704 0.5042 0.6397 0.9103
+    ## beta[2] 0.5473 0.8053 0.9357 1.0652 1.3093
+    ## prec.e  0.4648 0.6804 0.8122 0.9606 1.2897
 
 ``` r
 plot(Normal.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 # Now we modify this to get the MLE using data cloning.
@@ -924,22 +945,22 @@ summary(Normal.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## beta[1] 0.4925 0.08341 0.1865 0.0006810       0.000688 1.000
-    ## beta[2] 1.0833 0.09859 0.2205 0.0008050       0.000805 1.000
-    ## prec.e  0.9809 0.11419 0.2553 0.0009323       0.001211 1.001
+    ## beta[1] 0.5276 0.08853 0.1980 0.0007229      0.0007229     1
+    ## beta[2] 0.9663 0.08287 0.1853 0.0006766      0.0006908     1
+    ## prec.e  0.8661 0.09975 0.2231 0.0008145      0.0010933     1
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.3292 0.4361 0.4926 0.5486 0.6545
-    ## beta[2] 0.8901 1.0168 1.0843 1.1493 1.2763
-    ## prec.e  0.7704 0.9012 0.9775 1.0559 1.2164
+    ## beta[1] 0.3541 0.4685 0.5263 0.5867 0.7022
+    ## beta[2] 0.8032 0.9102 0.9659 1.0222 1.1283
+    ## prec.e  0.6843 0.7956 0.8635 0.9317 1.0742
 
 ``` r
 plot(Normal.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
 
 We will now modify the code to conduct count data regression using the
 Poisson distribution and log-link.
@@ -1000,21 +1021,21 @@ summary(Poisson.Bayes)
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##           Mean     SD  Naive SE Time-series SE
-    ## beta[1] 0.4899 0.1590 0.0012982       0.002994
-    ## beta[2] 1.1067 0.1119 0.0009138       0.002096
+    ##           Mean     SD Naive SE Time-series SE
+    ## beta[1] 0.4495 0.1619 0.001322       0.003079
+    ## beta[2] 1.0283 0.1295 0.001058       0.002481
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##           2.5%    25%   50%    75%  97.5%
-    ## beta[1] 0.1724 0.3874 0.494 0.5986 0.7896
-    ## beta[2] 0.8900 1.0318 1.106 1.1808 1.3275
+    ##           2.5%    25%    50%    75%  97.5%
+    ## beta[1] 0.1170 0.3437 0.4524 0.5611 0.7549
+    ## beta[2] 0.7829 0.9408 1.0257 1.1145 1.2871
 
 ``` r
 plot(Poisson.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 # Now we modify this to get the MLE using data cloning.
@@ -1094,21 +1115,21 @@ summary(Poisson.DC)
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##          Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## beta[1] 0.502 0.07035 0.1573 0.0005744      0.0012823 1.001
-    ## beta[2] 1.109 0.04975 0.1112 0.0004062      0.0009026 1.001
+    ##           Mean      SD  DC SD  Naive SE Time-series SE R hat
+    ## beta[1] 0.4557 0.07478 0.1672 0.0006106       0.001464 1.002
+    ## beta[2] 1.0352 0.05928 0.1325 0.0004840       0.001135 1.001
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.3619 0.4554 0.5029 0.5497 0.6366
-    ## beta[2] 1.0113 1.0748 1.1087 1.1421 1.2068
+    ## beta[1] 0.3046 0.4055 0.4563 0.5064 0.6002
+    ## beta[2] 0.9192 0.9950 1.0347 1.0751 1.1527
 
 ``` r
 plot(Poisson.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 ## Why use MCMC based Bayesian and data cloning?
 
