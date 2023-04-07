@@ -222,7 +222,7 @@ table(Y)
 
     ## Y
     ##  0  1 
-    ## 23  7
+    ## 20 10
 
 Analytical MLE:
 
@@ -285,12 +285,12 @@ summary(Occ.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean             SD       Naive SE Time-series SE 
-    ##      0.2505034      0.0757334      0.0006184      0.0008094 
+    ##      0.3443441      0.0819923      0.0006695      0.0008448 
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##   2.5%    25%    50%    75%  97.5% 
-    ## 0.1195 0.1962 0.2447 0.2994 0.4134
+    ## 0.1941 0.2866 0.3421 0.3990 0.5131
 
 ``` r
 plot(Occ.Bayes)
@@ -386,33 +386,33 @@ dclone(Y, 2)
 
     ##       clone.1 clone.2
     ##  [1,]       0       0
-    ##  [2,]       1       1
+    ##  [2,]       0       0
     ##  [3,]       0       0
     ##  [4,]       0       0
-    ##  [5,]       0       0
+    ##  [5,]       1       1
     ##  [6,]       0       0
     ##  [7,]       1       1
-    ##  [8,]       0       0
+    ##  [8,]       1       1
     ##  [9,]       0       0
     ## [10,]       0       0
     ## [11,]       0       0
-    ## [12,]       1       1
+    ## [12,]       0       0
     ## [13,]       1       1
-    ## [14,]       0       0
-    ## [15,]       0       0
-    ## [16,]       1       1
-    ## [17,]       0       0
+    ## [14,]       1       1
+    ## [15,]       1       1
+    ## [16,]       0       0
+    ## [17,]       1       1
     ## [18,]       0       0
     ## [19,]       0       0
     ## [20,]       0       0
     ## [21,]       0       0
     ## [22,]       0       0
-    ## [23,]       0       0
-    ## [24,]       0       0
-    ## [25,]       1       1
-    ## [26,]       1       1
+    ## [23,]       1       1
+    ## [24,]       1       1
+    ## [25,]       0       0
+    ## [26,]       0       0
     ## [27,]       0       0
-    ## [28,]       0       0
+    ## [28,]       1       1
     ## [29,]       0       0
     ## [30,]       0       0
     ## attr(,"n.clones")
@@ -430,33 +430,33 @@ dclone(dat, 2)
     ## $Y
     ##       clone.1 clone.2
     ##  [1,]       0       0
-    ##  [2,]       1       1
+    ##  [2,]       0       0
     ##  [3,]       0       0
     ##  [4,]       0       0
-    ##  [5,]       0       0
+    ##  [5,]       1       1
     ##  [6,]       0       0
     ##  [7,]       1       1
-    ##  [8,]       0       0
+    ##  [8,]       1       1
     ##  [9,]       0       0
     ## [10,]       0       0
     ## [11,]       0       0
-    ## [12,]       1       1
+    ## [12,]       0       0
     ## [13,]       1       1
-    ## [14,]       0       0
-    ## [15,]       0       0
-    ## [16,]       1       1
-    ## [17,]       0       0
+    ## [14,]       1       1
+    ## [15,]       1       1
+    ## [16,]       0       0
+    ## [17,]       1       1
     ## [18,]       0       0
     ## [19,]       0       0
     ## [20,]       0       0
     ## [21,]       0       0
     ## [22,]       0       0
-    ## [23,]       0       0
-    ## [24,]       0       0
-    ## [25,]       1       1
-    ## [26,]       1       1
+    ## [23,]       1       1
+    ## [24,]       1       1
+    ## [25,]       0       0
+    ## [26,]       0       0
     ## [27,]       0       0
-    ## [28,]       0       0
+    ## [28,]       1       1
     ## [29,]       0       0
     ## [30,]       0       0
     ## attr(,"n.clones")
@@ -490,33 +490,33 @@ dclone(dat, 2, unchanged="n", multiply="ncl")
     ## $Y
     ##       clone.1 clone.2
     ##  [1,]       0       0
-    ##  [2,]       1       1
+    ##  [2,]       0       0
     ##  [3,]       0       0
     ##  [4,]       0       0
-    ##  [5,]       0       0
+    ##  [5,]       1       1
     ##  [6,]       0       0
     ##  [7,]       1       1
-    ##  [8,]       0       0
+    ##  [8,]       1       1
     ##  [9,]       0       0
     ## [10,]       0       0
     ## [11,]       0       0
-    ## [12,]       1       1
+    ## [12,]       0       0
     ## [13,]       1       1
-    ## [14,]       0       0
-    ## [15,]       0       0
-    ## [16,]       1       1
-    ## [17,]       0       0
+    ## [14,]       1       1
+    ## [15,]       1       1
+    ## [16,]       0       0
+    ## [17,]       1       1
     ## [18,]       0       0
     ## [19,]       0       0
     ## [20,]       0       0
     ## [21,]       0       0
     ## [22,]       0       0
-    ## [23,]       0       0
-    ## [24,]       0       0
-    ## [25,]       1       1
-    ## [26,]       1       1
+    ## [23,]       1       1
+    ## [24,]       1       1
+    ## [25,]       0       0
+    ## [26,]       0       0
     ## [27,]       0       0
-    ## [28,]       0       0
+    ## [28,]       1       1
     ## [29,]       0       0
     ## [30,]       0       0
     ## attr(,"n.clones")
@@ -598,12 +598,12 @@ summary(Occ.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean      SD DC SD.phi_occ  Naive SE Time-series SE R hat
-    ## phi_occ 0.2368 0.03465       0.07748 0.0002829       0.000355     1
+    ## phi_occ 0.3359 0.03844       0.08595 0.0003138      0.0003985 1.001
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##   2.5%    25%    50%    75%  97.5% 
-    ## 0.1724 0.2128 0.2354 0.2599 0.3072
+    ## 0.2626 0.3098 0.3352 0.3610 0.4133
 
 ``` r
 plot(Occ.DC)
@@ -620,35 +620,47 @@ be modified to do linear and non-linear regression, Poisson regression
 etc.
 
 ``` r
-library(boot)
-n = 30
-X1 = rnorm(n)
+n = 30 # sample size
+X1 = rnorm(n) # a covariate
 X = model.matrix(~X1)
-beta.true = c(0.5,1)
-link_mu = X %*% beta.true
+beta.true = c(0.5, 1)
+link_mu = X %*% beta.true # logit scale
+```
 
-# Logistic regression model
-phi_occ = inv.logit(link_mu)
-Y = rbinom(n,1,phi_occ)
+### Logistic regression model
 
+``` r
+phi_occ = plogis(link_mu) # prob scale
+Y = rbinom(n, 1, phi_occ)
+```
+
+Maximum likelihood estimate using `glm()`:
+
+``` r
 MLE.est = glm(Y ~ X1, family="binomial")
-# Bayesian analysis
+```
 
+Bayesian analysis
+
+``` r
 Occ.model = function(){
   # Likelihood 
   for (i in 1:n){
     phi_occ[i] <- ilogit(X[i,] %*% beta)
-    Y[i] ~ dbin(phi_occ[i],1)
+    Y[i] ~ dbin(phi_occ[i], 1)
   }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
 }
+```
 
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
+Now we need to provide the data to the model and generate random numbers
+from the posterior. We will discuss different options later.
 
-dat = list(Y=Y,X=X,n=n)
-Occ.Bayes = jags.fit(dat,'beta',Occ.model)
+``` r
+dat = list(Y=Y, X=X, n=n)
+Occ.Bayes = jags.fit(data=dat, params="beta", model=Occ.model)
 ```
 
     ## Compiling model graph
@@ -675,44 +687,55 @@ summary(Occ.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean     SD Naive SE Time-series SE
-    ## beta[1] 0.8178 0.4411 0.003602       0.004833
-    ## beta[2] 1.2700 0.4435 0.003621       0.005104
+    ## beta[1] 0.4478 0.3631 0.002965       0.003546
+    ## beta[2] 0.5152 0.4421 0.003610       0.004744
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##             2.5%    25%    50%   75% 97.5%
-    ## beta[1] -0.01421 0.5134 0.8047 1.105 1.731
-    ## beta[2]  0.48438 0.9570 1.2376 1.552 2.219
+    ##            2.5%    25%    50%    75% 97.5%
+    ## beta[1] -0.2460 0.1983 0.4419 0.6917 1.170
+    ## beta[2] -0.3284 0.2162 0.5066 0.8051 1.414
 
 ``` r
 plot(Occ.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+Now we modify this to get the MLE using data cloning.
 
 ``` r
-# Now we modify this to get the MLE using data cloning.
-
 Occ.model_dc = function(){
   # Likelihood 
   for (k in 1:ncl){
-  for (i in 1:n){
-    phi_occ[i,k] <- ilogit(X[i,,k] %*% beta)
-    Y[i,k] ~ dbin(phi_occ[i,k],1)
-  }}
+    for (i in 1:n){
+      phi_occ[i,k] <- ilogit(X[i,,k] %*% beta)
+      Y[i,k] ~ dbin(phi_occ[i,k],1)
+    }
+  }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
 }
+```
 
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
+Now we need to provide the data to the model and generate random numbers
+from the posterior. We will discuss different options later.
 
-Y = array(Y,c(n,1))
-X = array(X,c(dim(X),1))
+``` r
+Y = array(Y, dim=c(n, 1))
+X = array(X, dim=c(dim(X), 1))
+# clone the objects
 Y = dcdim(Y)
 X = dcdim(X)
-dat = list(Y=Y,X=X,n=n, ncl=1)
-Occ.DC = dc.fit(dat,'beta',Occ.model_dc,n.clones=c(1,2,5),unchanged="n",multiply="ncl")
+```
+
+Data cloning with `dc.fit()`:
+
+``` r
+dat = list(Y=Y, X=X, n=n, ncl=1)
+Occ.DC = dc.fit(data=dat, params="beta", model=Occ.model_dc,
+  n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 ```
 
     ## 
@@ -768,34 +791,36 @@ summary(Occ.DC)
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##          Mean     SD  DC SD Naive SE Time-series SE R hat
-    ## beta[1] 1.016 0.2275 0.5087 0.001858       0.002740 1.001
-    ## beta[2] 1.476 0.2385 0.5333 0.001947       0.002794 1.002
+    ##           Mean     SD  DC SD Naive SE Time-series SE R hat
+    ## beta[1] 0.4832 0.1700 0.3800 0.001388       0.001818 1.001
+    ## beta[2] 0.5586 0.2126 0.4755 0.001736       0.002224 1.000
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##           2.5%    25%   50%   75% 97.5%
-    ## beta[1] 0.5803 0.8602 1.010 1.168 1.479
-    ## beta[2] 1.0421 1.3086 1.465 1.632 1.976
+    ##           2.5%    25%    50%    75%  97.5%
+    ## beta[1] 0.1493 0.3711 0.4836 0.5954 0.8167
+    ## beta[2] 0.1537 0.4137 0.5564 0.7012 0.9834
 
 ``` r
 plot(Occ.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 We hope you can see the pattern in how we are changing the prototype
 model function and the data function. If we want to do a Normal linear
 regression and Poisson regression we can modify the regression program
 above easily.
 
-``` r
-# Linear regression
+### Linear regression
 
+The following section issustrates Gaussian linear regression.
+
+``` r
 n = 30
 X1 = rnorm(n)
 X = model.matrix(~X1)
-beta.true = c(0.5,1)
+beta.true = c(0.5, 1)
 link_mu = X %*% beta.true
 
 # Linear regression model
@@ -803,9 +828,10 @@ mu = link_mu
 sigma.e = 1
 Y = rnorm(n,mean=mu,sd=sigma.e)
 
+# MLE
 MLE.est = glm(Y ~ X1, family="gaussian")
-# Bayesian analysis
 
+# Bayesian analysis
 Normal.model = function(){
   # Likelihood 
   for (i in 1:n){
@@ -813,15 +839,12 @@ Normal.model = function(){
     Y[i] ~ dnorm(mu[i],prec.e)
   }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
-  prec.e ~ dlnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
+  prec.e ~ dlnorm(0, 1)
 }
-
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
-
-dat = list(Y=Y,X=X,n=n)
-Normal.Bayes = jags.fit(dat,c("beta","prec.e"),Normal.model)
+dat = list(Y=Y, X=X, n=n)
+Normal.Bayes = jags.fit(data=dat, params=c("beta","prec.e"), model=Normal.model)
 ```
 
     ## Compiling model graph
@@ -848,47 +871,45 @@ summary(Normal.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean     SD Naive SE Time-series SE
-    ## beta[1] 0.5043 0.2038 0.001664       0.001664
-    ## beta[2] 0.9333 0.1940 0.001584       0.001609
-    ## prec.e  0.8297 0.2120 0.001731       0.002477
+    ## beta[1] 0.6997 0.1838 0.001501       0.001621
+    ## beta[2] 0.6055 0.1712 0.001398       0.001515
+    ## prec.e  1.1110 0.2887 0.002357       0.003329
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.1026 0.3704 0.5042 0.6397 0.9103
-    ## beta[2] 0.5473 0.8053 0.9357 1.0652 1.3093
-    ## prec.e  0.4648 0.6804 0.8122 0.9606 1.2897
+    ## beta[1] 0.3365 0.5777 0.6986 0.8231 1.0609
+    ## beta[2] 0.2671 0.4929 0.6053 0.7186 0.9415
+    ## prec.e  0.6245 0.9053 1.0852 1.2860 1.7481
 
 ``` r
 plot(Normal.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 ``` r
-# Now we modify this to get the MLE using data cloning.
-
+# MLE using data cloning.
 Normal.model_dc = function(){
   # Likelihood 
   for (k in 1:ncl){
-  for (i in 1:n){
-    mu[i,k] <- X[i,,k] %*% beta
-    Y[i,k] ~ dnorm(mu[i,k],prec.e)
-  }}
+    for (i in 1:n){
+      mu[i,k] <- X[i,,k] %*% beta
+      Y[i,k] ~ dnorm(mu[i,k],prec.e)
+    }
+  }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
-  prec.e ~ dlnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
+  prec.e ~ dlnorm(0, 1)
 }
-
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
-
-Y = array(Y,c(n,1))
-X = array(X,c(dim(X),1))
+Y = array(Y, dim=c(n, 1))
+X = array(X, dim=c(dim(X), 1))
 Y = dcdim(Y)
 X = dcdim(X)
-dat = list(Y=Y,X=X,n=n, ncl=1)
-Normal.DC = dc.fit(dat,c("beta","prec.e"),Normal.model_dc,n.clones=c(1,2,5),unchanged="n",multiply="ncl")
+dat = list(Y=Y, X=X, n=n, ncl=1)
+Normal.DC = dc.fit(data=dat, params=c("beta","prec.e"), model=Normal.model_dc,
+  n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 ```
 
     ## 
@@ -945,42 +966,43 @@ summary(Normal.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## beta[1] 0.5276 0.08853 0.1980 0.0007229      0.0007229     1
-    ## beta[2] 0.9663 0.08287 0.1853 0.0006766      0.0006908     1
-    ## prec.e  0.8661 0.09975 0.2231 0.0008145      0.0010933     1
+    ## beta[1] 0.7149 0.07839 0.1753 0.0006400      0.0006986 1.000
+    ## beta[2] 0.6155 0.07331 0.1639 0.0005985      0.0006439 1.000
+    ## prec.e  1.1706 0.13598 0.3041 0.0011103      0.0014387 1.001
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.3541 0.4685 0.5263 0.5867 0.7022
-    ## beta[2] 0.8032 0.9102 0.9659 1.0222 1.1283
-    ## prec.e  0.6843 0.7956 0.8635 0.9317 1.0742
+    ## beta[1] 0.5615 0.6625 0.7145 0.7673 0.8701
+    ## beta[2] 0.4710 0.5660 0.6158 0.6656 0.7588
+    ## prec.e  0.9218 1.0758 1.1649 1.2599 1.4547
 
 ``` r
 plot(Normal.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
+
+### Poisson log-link regression
 
 We will now modify the code to conduct count data regression using the
 Poisson distribution and log-link.
 
 ``` r
-# Poisson log-link regression
-
 n = 30
 X1 = rnorm(n)
 X = model.matrix(~X1)
-beta.true = c(0.5,1)
+beta.true = c(0.5, 1)
 link_mu = X %*% beta.true
 
 # Log-linear regression model
 mu = exp(link_mu)
-Y = rpois(n,mu)
+Y = rpois(n, mu)
 
+# MLE
 MLE.est = glm(Y ~ X1, family="poisson")
-# Bayesian analysis
 
+# Bayesian analysis
 Poisson.model = function(){
   # Likelihood 
   for (i in 1:n){
@@ -988,14 +1010,11 @@ Poisson.model = function(){
     Y[i] ~ dpois(mu[i])
   }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
 }
-
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
-
-dat = list(Y=Y,X=X,n=n)
-Poisson.Bayes = jags.fit(dat,c("beta"),Poisson.model)
+dat = list(Y=Y, X=X, n=n)
+Poisson.Bayes = jags.fit(data=dat, params="beta", model=Poisson.model)
 ```
 
     ## Compiling model graph
@@ -1022,44 +1041,42 @@ summary(Poisson.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean     SD Naive SE Time-series SE
-    ## beta[1] 0.4495 0.1619 0.001322       0.003079
-    ## beta[2] 1.0283 0.1295 0.001058       0.002481
+    ## beta[1] 0.5869 0.1517 0.001239        0.00257
+    ## beta[2] 0.9189 0.1110 0.000906        0.00186
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.1170 0.3437 0.4524 0.5611 0.7549
-    ## beta[2] 0.7829 0.9408 1.0257 1.1145 1.2871
+    ## beta[1] 0.2788 0.4865 0.5893 0.6915 0.8711
+    ## beta[2] 0.7073 0.8422 0.9163 0.9939 1.1421
 
 ``` r
 plot(Poisson.Bayes)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ``` r
-# Now we modify this to get the MLE using data cloning.
-
+# MLE using data cloning
 Poisson.model_dc = function(){
   # Likelihood 
   for (k in 1:ncl){
-  for (i in 1:n){
-    mu[i,k] <- exp(X[i,,k] %*% beta)
-    Y[i,k] ~ dpois(mu[i,k])
-  }}
+    for (i in 1:n){
+      mu[i,k] <- exp(X[i,,k] %*% beta)
+      Y[i,k] ~ dpois(mu[i,k])
+    }
+  }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
 }
-
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
-
-Y = array(Y,c(n,1))
-X = array(X,c(dim(X),1))
+Y = array(Y, dim=c(n, 1))
+X = array(X, dim=c(dim(X), 1))
 Y = dcdim(Y)
 X = dcdim(X)
-dat = list(Y=Y,X=X,n=n, ncl=1)
-Poisson.DC = dc.fit(dat,c("beta"),Poisson.model_dc,n.clones=c(1,2,5),unchanged="n",multiply="ncl")
+dat = list(Y=Y, X=X, n=n, ncl=1)
+Poisson.DC = dc.fit(data=dat, params="beta", model=Poisson.model_dc,
+  n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 ```
 
     ## 
@@ -1116,26 +1133,26 @@ summary(Poisson.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## beta[1] 0.4557 0.07478 0.1672 0.0006106       0.001464 1.002
-    ## beta[2] 1.0352 0.05928 0.1325 0.0004840       0.001135 1.001
+    ## beta[1] 0.5989 0.06990 0.1563 0.0005707       0.001215 1.002
+    ## beta[2] 0.9226 0.05058 0.1131 0.0004130       0.000893 1.003
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## beta[1] 0.3046 0.4055 0.4563 0.5064 0.6002
-    ## beta[2] 0.9192 0.9950 1.0347 1.0751 1.1527
+    ## beta[1] 0.4611 0.5520 0.5998 0.6466 0.7319
+    ## beta[2] 0.8236 0.8882 0.9223 0.9568 1.0218
 
 ``` r
 plot(Poisson.DC)
 ```
 
-![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
+![](statistical-and-computational-preliminaries_files/figure-gfm/unnamed-chunk-19-2.png)<!-- -->
 
 ## Why use MCMC based Bayesian and data cloning?
 
 1.  Writing the model function is much more intuitive than writing the
-    likelihood function, prior etc.
-2.  Do not need to do numerical integration or numerical optimization
+    likelihood function, prior, etc.
+2.  Do not need to do numerical integration or numerical optimization.
 3.  Data cloning overcomes multimodality of the likelihood function.
     Entire prior distribution essentially works as a set of starting
     values. In the usual optimization, starting values can be quite

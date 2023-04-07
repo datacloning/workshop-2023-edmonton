@@ -228,74 +228,98 @@ plot(Occ.DC)
 Now we will generalize these models to account for covariates. We will consider Logistic regression but also comment on how to change it to Probit regression easily. Similarly we show how this basic prototype can be modified to do linear and non-linear regression, Poisson regression etc. 
 
 ```{r}
-library(boot)
-n = 30
-X1 = rnorm(n)
+n = 30 # sample size
+X1 = rnorm(n) # a covariate
 X = model.matrix(~X1)
-beta.true = c(0.5,1)
-link_mu = X %*% beta.true
+beta.true = c(0.5, 1)
+link_mu = X %*% beta.true # logit scale
+```
 
-# Logistic regression model
-phi_occ = inv.logit(link_mu)
-Y = rbinom(n,1,phi_occ)
+### Logistic regression model
 
+```{r}
+phi_occ = plogis(link_mu) # prob scale
+Y = rbinom(n, 1, phi_occ)
+```
+
+Maximum likelihood estimate using `glm()`:
+
+```{r}
 MLE.est = glm(Y ~ X1, family="binomial")
-# Bayesian analysis
+```
 
+Bayesian analysis
+
+```{r}
 Occ.model = function(){
   # Likelihood 
   for (i in 1:n){
     phi_occ[i] <- ilogit(X[i,] %*% beta)
-    Y[i] ~ dbin(phi_occ[i],1)
+    Y[i] ~ dbin(phi_occ[i], 1)
   }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
 }
+```
 
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
+Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
 
-dat = list(Y=Y,X=X,n=n)
-Occ.Bayes = jags.fit(dat,'beta',Occ.model)
+```{r}
+dat = list(Y=Y, X=X, n=n)
+Occ.Bayes = jags.fit(data=dat, params="beta", model=Occ.model)
 summary(Occ.Bayes)
 plot(Occ.Bayes)
+```
 
-# Now we modify this to get the MLE using data cloning.
+Now we modify this to get the MLE using data cloning.
 
+```{r}
 Occ.model_dc = function(){
   # Likelihood 
   for (k in 1:ncl){
-  for (i in 1:n){
-    phi_occ[i,k] <- ilogit(X[i,,k] %*% beta)
-    Y[i,k] ~ dbin(phi_occ[i,k],1)
-  }}
+    for (i in 1:n){
+      phi_occ[i,k] <- ilogit(X[i,,k] %*% beta)
+      Y[i,k] ~ dbin(phi_occ[i,k],1)
+    }
+  }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
 }
+```
 
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
+Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
 
-Y = array(Y,c(n,1))
-X = array(X,c(dim(X),1))
+```{r}
+Y = array(Y, dim=c(n, 1))
+X = array(X, dim=c(dim(X), 1))
+# clone the objects
 Y = dcdim(Y)
 X = dcdim(X)
-dat = list(Y=Y,X=X,n=n, ncl=1)
-Occ.DC = dc.fit(dat,'beta',Occ.model_dc,n.clones=c(1,2,5),unchanged="n",multiply="ncl")
+```
+
+Data cloning with `dc.fit()`:
+
+```{r}
+dat = list(Y=Y, X=X, n=n, ncl=1)
+Occ.DC = dc.fit(data=dat, params="beta", model=Occ.model_dc,
+  n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 summary(Occ.DC)
 plot(Occ.DC)
-
 ```
 
 We hope you can see the pattern in how we are changing the prototype model function and the data function. If we want to do a Normal linear regression and Poisson regression we can modify the regression program above easily.
 
-```{r}
-# Linear regression
+### Linear regression
 
+The following section issustrates Gaussian linear regression.
+
+```{r}
 n = 30
 X1 = rnorm(n)
 X = model.matrix(~X1)
-beta.true = c(0.5,1)
+beta.true = c(0.5, 1)
 link_mu = X %*% beta.true
 
 # Linear regression model
@@ -303,9 +327,10 @@ mu = link_mu
 sigma.e = 1
 Y = rnorm(n,mean=mu,sd=sigma.e)
 
+# MLE
 MLE.est = glm(Y ~ X1, family="gaussian")
-# Bayesian analysis
 
+# Bayesian analysis
 Normal.model = function(){
   # Likelihood 
   for (i in 1:n){
@@ -313,65 +338,59 @@ Normal.model = function(){
     Y[i] ~ dnorm(mu[i],prec.e)
   }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
-  prec.e ~ dlnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
+  prec.e ~ dlnorm(0, 1)
 }
-
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
-
-dat = list(Y=Y,X=X,n=n)
-Normal.Bayes = jags.fit(dat,c("beta","prec.e"),Normal.model)
+dat = list(Y=Y, X=X, n=n)
+Normal.Bayes = jags.fit(data=dat, params=c("beta","prec.e"), model=Normal.model)
 summary(Normal.Bayes)
 plot(Normal.Bayes)
 
-# Now we modify this to get the MLE using data cloning.
-
+# MLE using data cloning.
 Normal.model_dc = function(){
   # Likelihood 
   for (k in 1:ncl){
-  for (i in 1:n){
-    mu[i,k] <- X[i,,k] %*% beta
-    Y[i,k] ~ dnorm(mu[i,k],prec.e)
-  }}
+    for (i in 1:n){
+      mu[i,k] <- X[i,,k] %*% beta
+      Y[i,k] ~ dnorm(mu[i,k],prec.e)
+    }
+  }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
-  prec.e ~ dlnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
+  prec.e ~ dlnorm(0, 1)
 }
-
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
-
-Y = array(Y,c(n,1))
-X = array(X,c(dim(X),1))
+Y = array(Y, dim=c(n, 1))
+X = array(X, dim=c(dim(X), 1))
 Y = dcdim(Y)
 X = dcdim(X)
-dat = list(Y=Y,X=X,n=n, ncl=1)
-Normal.DC = dc.fit(dat,c("beta","prec.e"),Normal.model_dc,n.clones=c(1,2,5),unchanged="n",multiply="ncl")
+dat = list(Y=Y, X=X, n=n, ncl=1)
+Normal.DC = dc.fit(data=dat, params=c("beta","prec.e"), model=Normal.model_dc,
+  n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 summary(Normal.DC)
 plot(Normal.DC)
-
 ```
+
+### Poisson log-link regression
 
 We will now modify the code to conduct count data regression using the Poisson distribution and log-link.
 
-
 ```{r}
-# Poisson log-link regression
-
 n = 30
 X1 = rnorm(n)
 X = model.matrix(~X1)
-beta.true = c(0.5,1)
+beta.true = c(0.5, 1)
 link_mu = X %*% beta.true
 
 # Log-linear regression model
 mu = exp(link_mu)
-Y = rpois(n,mu)
+Y = rpois(n, mu)
 
+# MLE
 MLE.est = glm(Y ~ X1, family="poisson")
-# Bayesian analysis
 
+# Bayesian analysis
 Poisson.model = function(){
   # Likelihood 
   for (i in 1:n){
@@ -379,48 +398,41 @@ Poisson.model = function(){
     Y[i] ~ dpois(mu[i])
   }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
 }
-
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
-
-dat = list(Y=Y,X=X,n=n)
-Poisson.Bayes = jags.fit(dat,c("beta"),Poisson.model)
+dat = list(Y=Y, X=X, n=n)
+Poisson.Bayes = jags.fit(data=dat, params="beta", model=Poisson.model)
 summary(Poisson.Bayes)
 plot(Poisson.Bayes)
 
-# Now we modify this to get the MLE using data cloning.
-
+# MLE using data cloning
 Poisson.model_dc = function(){
   # Likelihood 
   for (k in 1:ncl){
-  for (i in 1:n){
-    mu[i,k] <- exp(X[i,,k] %*% beta)
-    Y[i,k] ~ dpois(mu[i,k])
-  }}
+    for (i in 1:n){
+      mu[i,k] <- exp(X[i,,k] %*% beta)
+      Y[i,k] ~ dpois(mu[i,k])
+    }
+  }
   # Prior
-  beta[1]~dnorm(0,1)
-  beta[2]~dnorm(0,1)
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
 }
-
-# Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
-
-Y = array(Y,c(n,1))
-X = array(X,c(dim(X),1))
+Y = array(Y, dim=c(n, 1))
+X = array(X, dim=c(dim(X), 1))
 Y = dcdim(Y)
 X = dcdim(X)
-dat = list(Y=Y,X=X,n=n, ncl=1)
-Poisson.DC = dc.fit(dat,c("beta"),Poisson.model_dc,n.clones=c(1,2,5),unchanged="n",multiply="ncl")
+dat = list(Y=Y, X=X, n=n, ncl=1)
+Poisson.DC = dc.fit(data=dat, params="beta", model=Poisson.model_dc,
+  n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 summary(Poisson.DC)
 plot(Poisson.DC)
-
 ```
-
 
 ## Why use MCMC based Bayesian and data cloning?
 
-1. Writing the model function is much more intuitive than writing the likelihood function, prior etc. 
-2. Do not need to do numerical integration or numerical optimization
+1. Writing the model function is much more intuitive than writing the likelihood function, prior, etc. 
+2. Do not need to do numerical integration or numerical optimization.
 3. Data cloning overcomes multimodality of the likelihood function. Entire prior distribution essentially works as a set of starting values. In the usual optimization, starting values can be quite important when the function is not well behaved. By using data cloning, except for the global maximum, all the local maxima tend to 0. 
 4. Asymptotic variance of the MLE is simple to obtain. It is also more stable than computing the inverse of the second derivative of the log-likelihood function numerically.
