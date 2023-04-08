@@ -117,7 +117,7 @@ table(Y)
 Analytical MLE:
 
 ```{r}
-MLE.est = sum(Y)/n
+(MLE.est = sum(Y)/n)
 ```
 
 ### Bayesian inference
@@ -145,6 +145,8 @@ Occ.Bayes = jags.fit(data=dat, params="phi_occ", model=Occ.model)
 summary(Occ.Bayes)
 plot(Occ.Bayes)
 ```
+
+The summary describes the posterior distribution: its mean, standard deviation, and quantiles.
 
 This was quite easy. Now we use data cloning to compute the MLE and its variance using MCMC.
 
@@ -225,6 +227,30 @@ Occ.DC = dc.fit(data=dat, params="phi_occ", model=Occ.model.dc,
   n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
 summary(Occ.DC)
 plot(Occ.DC)
+```
+
+Notice the `Mean`, `DC SD`, and `R hat` columns in the summary. These refer to the maximum likelihood estimate, the asymptotic standatd error (SD of the posterior times square root of _K_), and the Gelman-Rubin disgnostic:
+
+```{r}
+coef(Occ.DC) # MLE
+dcsd(Occ.DC) # SE=SD*sqrt(K)
+gelman.diag(Occ.DC) # R hat
+```
+
+### Summaries for the clones
+
+Summaries of the posterior distributions for the different numbers of clones are saved and we can print these out with the `dctable()` command. We can visualize these with the `plot` function.
+
+```{r}
+dctable(Occ.DC)
+dctable(Occ.DC) |> plot()
+```
+
+Some data cloning related diagnostics are printed with the `dcdiag()` function. We will discuss these statistics in detail. The most important thing to ckeck is that the solid line follows the scattered line for `lambda.max`, i.e. decreases with the number of clones.
+
+```{r}
+dcdiag(Occ.DC)
+dcdiag(Occ.DC) |> plot()
 ```
 
 ## Regression models
@@ -313,6 +339,24 @@ Occ.DC = dc.fit(data=dat, params="beta", model=Occ.model_dc,
 summary(Occ.DC)
 plot(Occ.DC)
 pairs(Occ.DC)
+```
+
+These are the familiar functions for the asymptotic ML inference (already accounted for the number of clones):
+
+```{r}
+coef(Occ.DC) # MLE
+dcsd(Occ.DC) # SE
+vcov(Occ.DC) # asymptotic VCV
+confint(Occ.DC, level=0.95) # 95% CI
+```
+
+Let's check the posterior summaries and the DC diagnostics:
+
+```{r}
+dctable(Occ.DC)
+dctable(Occ.DC) |> plot()
+dcdiag(Occ.DC)
+dcdiag(Occ.DC) |> plot()
 ```
 
 We hope you can see the pattern in how we are changing the prototype model function and the data function. If we want to do a Normal linear regression and Poisson regression we can modify the regression program above easily.

@@ -19,7 +19,11 @@ Windows: download the installed from [here](https://sourceforge.net/projects/mcm
 From R:
 
 ```R
-install.packages(c('rjags', 'dclone', 'shiny', 'ggplot2', 'mgcv', 'R2WinBUGS'))
+# CRAN packages
+install.packages(c("rjags", "shiny", "R2WinBUGS"))
+
+# latest dclone version from R-universe
+install.packages("dclone", repos = 'https://datacloning.r-universe.dev')
 ```
 
 ## Test your installation
@@ -27,5 +31,5 @@ install.packages(c('rjags', 'dclone', 'shiny', 'ggplot2', 'mgcv', 'R2WinBUGS'))
 If you can run this example without error, you are all set:
 
 ```R
-example("jags.fit", "dclone", run.dontrun = TRUE)
+example("jags.fit", package = "dclone", run.dontrun = TRUE)
 ```
