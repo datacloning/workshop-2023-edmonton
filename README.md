@@ -43,7 +43,7 @@ Read the [notes](./prior/) about statistical concepts and the workflow we will r
 | Topic    | Links |
 | -------- | ------- |
 | Setup  | [Instructions](setup.md)  |
-| Preliminaries  | [Notes](./prior/), [App](./app/)  |
+| Preliminaries  | [Notes](./01-intro/), [App](./app/)  |
 | References  | [PDF files](./docs/)  |
 
 ## License
