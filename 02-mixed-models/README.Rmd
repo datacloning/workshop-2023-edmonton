@@ -1,0 +1,662 @@
+---
+title: "Random effects models and data cloning"
+output:
+  github_document:
+    math_method:
+      engine: webtex
+      url: https://latex.codecogs.com/svg.image?
+---
+
+```{r include=FALSE}
+set.seed(0)
+```
+
+## Introduction
+
+In the previous part, we reviewed the basic statistical concepts behind the likelihood inference and the Bayesian inference. We looked at how to write a JAGS model function for some linear and generalized linear regression models and use it in the package 'dclone' to get the Bayesian credible intervals as well as the frequentist confidence intervals based on the asymptotic normal distribution. We also discussed some of the reasons to use the MCMC approach to conducting statistical inference, either Bayesian or frequentist. 
+
+We will now generalize the models to make them relevant to some complex practical situations. These are some of the situations where the analytical approaches to Bayesian and likelihood inference are difficult to impossible to implement. The question of estimability of the parameters becomes much more relevant but difficult to diagnose. The method of data cloning is particularly useful for diagnosing estimability of the parameters. You will notice that, although the models are much more complex, the coding component does not increase in complexity. We will also discuss prediction of missing data. 
+
+## Detection error in occupancy studies (latent variables)
+
+Let us revisit the occupancy model again. In practice, the assumption that you observe the occupancy status correctly is somewhat suspect. For example, if we are looking for a bird species, if the bird never sings or gives some sort of a cue, it is extremely difficult to know if they are there. Hence, even if the species is present, we may make an error and note that it is not present. This is called 'detection error'. How can we model this? 
+
+Let $W_i$ denote the true status of the _i_-th cell. So in our previous notation, now $P(W_{i}=1)=\phi$. The observed value, generally denoted by $Y_i$ could be 1 or 0 depending on the true status. If we assume that the species are never misidentified, then we can write
+$P(Y_i=1|W_{i}=1)=p$ and $P(Y_i=0|W_{i}=1)=1-p$. Moreover, $P(Y_i=0|W_{i}=0)=1$. In principle, we can also have misidentification. For example, a coyote could be mistaken for a wolf. But we will not discuss it here. It is a fairly simple extension of this model. Probability of detection is $p$ and probability of occupancy is $\phi$. How can we infer about these given the data? 
+
+Notice that we only observe $Y_i$'s and not the $W_i$'s.  *The unobserved variable $W_i$ is called a latent variable.* 
+
+To write down the likelihood function, we need to compute the distribution of the observed data $Y_i$. We can see that $P(Y_{i}=1)=p \phi$ and $P(Y_{i}=0)=(1-p) \phi$. We can write down the likelihood based on this. However, we are going to write this as a hierarchical model.  
+
+Let us modify the previous code to see how this inference proceeds.
+
+```{r}
+library(dclone)
+
+phi.true = 0.3 # occupancy
+p.true = 0.7   # detectability
+n = 30         # sample size
+W = rbinom(n, 1 ,phi.true)   # true status
+Y = rbinom(n, 1, W * p.true) # detections
+```
+
+### Bayesian inference using JAGS and dclone
+
+Step 1: WE need to define the model function. This is the critical component. 
+
+```{r}
+Occ.model = function(){
+  # Likelihood: Latent variables are random variables.
+  for (i in 1:n){
+    W[i] ~ dbin(phi_occ, 1)
+    Y[i] ~ dbin(W[i] * p_det, 1)
+  }
+  # Priors
+  phi_occ ~ dbeta(1, 1)
+  p_det ~ dbeta(1, 1)
+}
+```
+
+Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
+
+```{r}
+dat = list(Y=Y, n=n)
+```
+
+Following command will not work. But try it by removing the comments hash to see what happens.
+
+```{r error=TRUE}
+Occ.Bayes = jags.fit(data=dat, params=c("phi_occ","p_det"), model=Occ.model)
+```
+
+This did not quite work. When there are latent variables, many times, we have to start the process at the appropriate initial values. 
+
+```{r}
+ini = list(W=rep(1, n)) 
+Occ.Bayes = jags.fit(data=dat, params=c("phi_occ","p_det"), model = Occ.model,
+    inits=ini)
+summary(Occ.Bayes)
+plot(Occ.Bayes)
+```
+
+This seems to work quite well! But our answers are quite weird (We know the truth!). Let us plot the two dimensional (joint) distribution of the parameters.
+
+```{r}
+pairs(Occ.Bayes)
+```
+
+This suggests that the posterior distribution is banana shaped. But just looking at these plots, we cannot say for sure if our answers are correct or not. 
+
+Should we, then, accept the answers? Not so fast. Let us look at the model again. It is clear that we can estimate the product $p \phi$ given the data. But decomposing this product in $p$ and $\phi$ is impossible. This is called 'non-estimability'.
+
+In this case, this also is non-identifiability. There are several combinations of $p$ and $\phi$ that lead to the same $p \phi$ and hence the same distribution of the observed data. Such situations are not uncommon when dealing with the hiearchical models in general, and measurement error models in particular.
+
+We should not make any inferences about the probability of occupancy based on these data. You can change the priors and see what happens to the posteriors. You might find it interesting and educational. 
+
+**Non-estimability: If there are two or more values in the parameter space that lead to identical likelihood value, such values are called 'non-estimable'.**
+
+Note: You may recall from the linear regression that if the covariates are perfectly correlated with each other, the regression coefficients are non-estimable. If covariate $X_1$ is perfectly correlated with $X_2$, these covariates separately give no additional information. 
+
+### Bayesian result and its data cloning version
+
+If the posterior distribution converges to a non-degenerate distribution as the sample size increases, it implies that set of parameters is non-estimable. 
+
+If the posterior distribution converges to a non-degenerate distribution as the number of clones increases, it implies that set of parameters is non-estimable.
+
+An immediate consequence of this result is that the variance of the posterior distribution does not converge to 0 (instead it converges to some positive number). 
+
+Let us modify our data cloning code to see what happens. 
+
+```{r}
+Occ.model.dc = function(){
+  # Likelihood 
+  for(k in 1:ncl){
+    for (i in 1:n){
+        W[i,k] ~ dbin(p_det, 1)
+        Y[i,k] ~ dbin(phi_occ, 1)
+    }
+  }
+  # Prior
+  phi_occ ~ dbeta(1, 1)
+  p_det ~ dbeta(1, 1)
+}
+```
+
+We need to turn the original data into an array. And we need to add another index `ncl` for the cloned dimension. It gets multiplied by the number of clones.
+
+```{r}
+Y = array(Y, dim=c(n, 1))
+Y = dcdim(Y)
+dat = list(Y=Y, n=n, ncl=1)
+```
+
+As previously, we need to initiate the `W`'s. 
+
+```{r}
+ini = list(W=array(rep(1, n), dim=c(n, 1)))
+```
+
+We need to clone these initial values as well. You should always check if this is doing the right job.
+
+```{r}
+initfn = function(model, n.clones){
+  W=array(rep(1, n), dim=c(n, 1))
+  list(W=dclone(dcdim(W), n.clones))
+}
+initfn(n.clones=2)
+```
+
+Let's run data cloning.
+
+```{r}
+Occ.DC = dc.fit(data=dat, params=c("phi_occ","p_det"), model=Occ.model.dc,
+    n.clones=c(1, 2, 5), unchanged="n", multiply="ncl",
+    inits=ini, initsfun=initfn)
+summary(Occ.DC)
+plot(Occ.DC)
+```
+
+There are a couple of diagnostic tools available in 'dclone' for the non-estimability issue. 
+
+```{r}
+dcdiag(Occ.DC)
+dcdiag(Occ.DC) |> plot()
+```
+
+
+1. Check if the `lambda.max` is converging to zero. The rate at which this converges to zero should be approximately 1/_K_.
+2. If the variance is converging to 0 but the rate is different than 1/_K_, it implies the asymptotics is of a different order. If you find such an example in your work, please let me know. 
+3. Check the pairs plot to see if the likelihood function is converging to a manifold instead of a single point. 
+
+**Availability of the estimability diagnostics is one of the most important features of data cloning. It will warn you if your scientific inferences could be misleading.**
+
+If the parameters are non-estimable, the only recourse one has is to change the model (add assumptions or collect different kind of data). There is always a possibility that, although the full parameter space may not be estimable, a function of the parameter might be estimable. If such a function is also of scientific interest, we can safely conduct scientific inferences based on estimates of such a function of the parameters.
+
+### Replicate surveys
+
+Suppose we visit the same cell several times. Assume that the visits are independent of each other and the true occupancy status remains the same throughout these surveys, then we can estimate the parameters. The model can be written as a hierarchical model:
+
+- Hierarchy 1: $W_{i}\sim Bernoulli(\phi)$
+- Hierarchy 2: $Y_{ij}|W_{i}=w_{i}\sim Bernoulli(p w_{i})$
+
+Notice that hierarchy 2 depends on hierarchy 1 result. 
+
+We can easily modify the earlier code to allow for multiple surveys. We will do such a modification with two surveys for each cell. 
+
+```{r}
+phi.true = 0.3
+p.true = 0.7
+n = 30
+v = 2 # number of visits
+W = rbinom(n, 1, phi.true)
+Y = NULL
+for (j in 1:v)
+    Y <- cbind(Y, rbinom(n, 1, W * p.true))
+```
+
+### Bayesian inference using JAGS and dclone
+
+Step 1: we need to define the model function.
+
+```{r}
+Occ.model = function(){
+  # Likelihood: Latent variables are random variables.
+  for (i in 1:n){
+    W[i] ~ dbin(phi_occ, 1)
+    for (j in 1:v){
+        Y[i,j] ~ dbin(W[i] * p_det, 1)}
+  }
+  # Priors
+  phi_occ ~ dbeta(1, 1)
+  p_det ~ dbeta(1, 1)
+}
+```
+
+Now we need to provide the data to the model and generate random numbers from the posterior. We will discuss different options later. 
+
+```{r}
+dat = list(Y=Y, n=n, v=v)
+ini = list(W=rep(1, n))
+
+Occ.Bayes = jags.fit(data=dat, params=c("phi_occ","p_det"), model=Occ.model,
+    inits=ini)
+summary(Occ.Bayes)
+plot(Occ.Bayes)
+pairs(Occ.Bayes)
+```
+
+These are nice unimodal posterior distributions.
+
+We can modify the data cloning code to check if the parameters are, in fact, estimable. 
+
+```{r}
+Occ.model.dc = function(){
+  # Likelihood
+  for(k in 1:ncl){
+    for (i in 1:n){
+      W[i,k] ~ dbin(phi_occ, 1)
+      for (j in 1:v){
+        Y[i,j,k] ~ dbin(p_det * W[i,k], 1)
+      }
+    }
+  }
+  # Prior
+  phi_occ ~ dbeta(1, 1)
+  p_det ~ dbeta(1, 1)
+}
+```
+
+We need to turn the original data into an array. 
+And we need to add another index `ncl` for the cloned dimension. It gets multiplied by the number of clones.
+
+```{r}
+Y = array(Y, dim=c(n,v,1))
+Y = dcdim(Y)
+dat = list(Y=Y, n=n, v=v, ncl=1)
+
+# As previously, we need to initiate the W's. 
+ini = list(W=array(rep(1, n), dim=c(n, 1)))
+# We need to clone these initial values as well. You should always check if this is doing the right job.
+initfn =function(model, n.clones){
+  W=array(rep(1,n), dim=c(n,1))
+  list(W=dclone(dcdim(W), n.clones))
+}
+Occ.DC = dc.fit(data=dat, params=c("phi_occ","p_det"), model=Occ.model.dc,
+    n.clones=c(1, 2, 5),
+    unchanged=c("n","v"), multiply="ncl",
+    inits=ini, initsfun=initfn)
+summary(Occ.DC)
+plot(Occ.DC)
+dcdiag(Occ.DC)
+plot(dcdiag(Occ.DC))
+```
+
+## Random effects in regression: Why and when? 
+
+We have shown how hierarchical models can be used to deal with measurement error. Now we will look at a few examples where we use them to combine data across several studies. 
+
+We will start with a simple (but extremely important) example that started the entire field of mixture as well as hierarchical models (Neyman and Scott, 1949).
+
+Researchers in animal husbandary wanted to know how to improve the stock of animals such as milk cows and bulls. This played an important role in the 'white revolution' that lead to improving the nutrition in many countries. Following is a somewhat made up and highly simplified situation. 
+
+Suppose we have _n_ cows. We want to know which cows have good genetic potential that can be passed on to the next generation. Each cow might have only a few calves. We measure the amount of milk by each calf. 
+
+Let $Y_ij$ be the amount of milk produced by the j-th calf of the i-th cow. We can consider a linear model that uses the 'cow effect' (genetic) and 'environmental effect' to explain the amount of milk.
+This is same as one way ANOVA model.
+
+$Y_{ij}=\mu+\alpha_{i}+\epsilon_{ij}$
+
+Under the usual Gaussian error structure, we know that
+
+$Y_{ij}\sim N(\mu_{i},\sigma^{2})$ where $i=1,2,...,n$ and $j=1,2$ ($\mu_{i}=\mu + \alpha_i$).
+
+There are $2 n$ observations and $n+1$ parameters. The number of parameters increases at the same rate as the number of observations. Note that the ratio of parameters to observations converges to 0.5. Roughly speaking, for the MLE to work, this ratio needs to go to 0. Generally the number of parameters is fixed and hence this condition is satisfied.
+
+We simply do not have much information about each $\mu_i$ as there are only two observations corresponding to it. It also turns out that the ML estimator of $\sigma^2$ converges to $0.5*\sigma^2$. Hence it is not consistent even though the number of observations corresponding to it do converge to infinity. This was a major blow to the theory of maximum likelihood. Although it turns out Fisher had implicitly answered it a decade before this paper.
+
+How can we reduce the number of parameters? 
+
+1. If there are covariates such as weight of the mother, mother's milk production are available, we can model $\mu_{i}=X_{i}\beta$. 
+2. Suppose covariates are not available or difficult to assess what to use as a covariate. If we assume that cows are kind of similar to each other, then we can assume that they come from a population of cows such that $\mu_{i}\sim N(\mu,\tau^{2})$. It turns out, under such an assumption, we can estimate the parameters $(\mu,\sigma^2,\tau^2)$ consistently. 
+
+This model is a hierarchical model.
+
+- Hierarchy 1: $Y_{ij}|\mu_i\sim N(\mu_{i},\sigma^{2})$ 
+- Hierarchy 2: $\mu_{i}\sim N(\mu,\tau^{2})$
+
+For a Bayesian approach, we put priors on the three parameters. This forms the third hierarchy. 
+
+This simple model can be used in many different situations. 
+
+1. Measurement error in covariates in regression
+2. Random intercept regression model to account for missing covariates
+3. Kalman filter models for time series with measurement error are of the same kind with a bit more complexity as we will see the third part. 
+
+Let us see what makes it a difficult model to analyze using the likelihood approach.
+
+In order to write down the likelihood function, we need to compute the marginal distribution of the observations. Remember $\mu_i$ are not observed. Hence we have to integrate over them.
+
+\[
+f(y_{ij};\mu,\sigma^{2},\tau^{2})=\int f(y_{ij}|\mu_{i})g(\mu_{i})d\mu_{i}
+\]
+
+Again, this is not a precise statement but it gives you the idea. This integral is one dimensional and hence can be computed analytically and also numerically. However, in many cases the dimension of the integral is quite large and hence neither of these solutions are available. In some cases, one can obtain Laplace approximation to this integral (INLA and related methods rely on this approximation). The most general approach is based on the MCMC algorithm.
+
+```{r}
+n = 30
+mu_true = 2
+tau_true = 0.5
+sigma_true = 1
+
+mu = rnorm(n, mu_true, tau_true)
+Y = cbind(
+    rnorm(n, mu, sigma_true),
+    rnorm(n, mu, sigma_true))
+```
+
+We will write the Bayesian model first. Remember the normal distribution is defined in terms of the precision (inverse of the variance).
+
+```{r}
+LM_Bayes = function(){
+  # Likelihood
+  for (i in 1:n){
+    mu[i] ~ dnorm(mu.t, prec_tau)
+    for (j in 1:2){
+      Y[i,j] ~ dnorm(mu[i], prec_sigma)
+    }
+  }
+  # Priors
+  mu.t ~ dnorm(0, 0.01)
+  prec_tau ~ dgamma(0.1, 0.1)
+  prec_sigma ~ dgamma(0.1, 0.1)
+  # Parameters on the natural scale
+  tau <- sqrt(1/prec_tau)
+  sigma <- sqrt(1/prec_sigma)
+}
+```
+
+Data in array form for data cloning purpose
+
+```{r}
+Y = as.array(Y, dim=c(n,2,1))
+Y = dcdim(Y)
+
+dat = list(Y=Y, n=n)
+LM_Bayes_fit = jags.fit(data=dat, params=c("mu.t","tau","sigma"), model=LM_Bayes)
+summary(LM_Bayes_fit)
+```
+
+We will modify it to do data cloning. This is useful to assure us that the parameters are estimable. It is also important for making it invariant to the choice of the priors and parameterization.
+
+```{r}
+LM_DC = function(){
+  # Likelihood
+  for (k in 1:ncl){
+    for (i in 1:n){
+      mu[i,k] ~ dnorm(mu.t, prec_tau)
+      for (j in 1:2){
+        Y[i,j,k] ~ dnorm(mu[i,k], prec_sigma)
+      }
+    }
+  }
+  # Priors
+  mu.t ~ dnorm(0, 0.01)
+  prec_tau ~ dgamma(0.1, 0.1)
+  prec_sigma ~ dgamma(0.1, 0.1)
+  # Parameters on the natural scale
+  tau <- sqrt(1/prec_tau)
+  sigma <- sqrt(1/prec_sigma)
+}
+```
+
+Data in array form for data cloning purpose.
+
+```{r}
+Y = array(Y, dim=c(n,2,1))
+Y = dcdim(Y)
+
+dat = list(Y=Y, n=n, ncl=1)
+LM_DC_fit = dc.fit(data=dat, params=c("mu.t","tau","sigma"), model=LM_DC,
+    n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
+summary(LM_DC_fit)
+pairs(LM_DC_fit)
+dcdiag(LM_DC_fit)
+plot(dcdiag(LM_DC_fit))
+```
+
+The best thing about the MCMC approach is that we can modify the prototype program to do Generalized linear mixed models. 
+
+Let us see how we can change the program to do Poisson regression with random intercepts. This is useful for accounting for missing covariates in the usual Poisson regression. This can also be used to account for site effect in abundance surveys. 
+
+Mathematically the model is:
+
+- Hierarchy 1: $log(\lambda_{i})\sim N(log(\lambda),\tau^{2})$
+- Hierarchy 2: $Y_{i}|\lambda_{i}\sim Poisson(\lambda_{i})$
+
+```{r}
+n = 30
+mu_true = 2
+tau_true = 0.5
+sigma_true = 1
+
+mu = rnorm(n, mu_true, tau_true)
+Y = rpois(n, exp(mu))
+```
+
+We will write the Bayesian model first. Remember the normal distribution is defined in terms of the precision (inverse of the variance).
+
+```{r}
+GLMM_Bayes = function(){
+  # Likelihood
+  for (i in 1:n){
+    mu[i] ~ dnorm(mu.t, prec_tau)
+    Y[i] ~ dpois(exp(mu[i]))
+  }
+  # Priors
+  mu.t ~ dnorm(0, 0.01)
+  prec_tau ~ dgamma(0.1, 0.1)
+  # Parameters on the natural scale
+  tau <- sqrt(1/prec_tau)
+  lambda <- exp(mu.t)
+}
+
+dat = list(Y=Y, n=n)
+GLMM_Bayes_fit = jags.fit(data=dat, params=c("lambda","tau"), model=GLMM_Bayes)
+summary(GLMM_Bayes_fit)
+```
+
+As usual, we can turn the crank for data cloning to check the estimability of the parameters. 
+
+```{r}
+GLMM_DC = function(){
+  # Likelihood
+  for (k in 1:ncl){
+    for (i in 1:n){
+      mu[i,k] ~ dnorm(mu.t,prec_tau)
+      Y[i,k] ~ dpois(exp(mu[i,k]))
+    }
+  }
+  # Priors
+  mu.t ~ dnorm(0, 0.01)
+  prec_tau ~ dgamma(0.1, 0.1)
+  # Parameters on the natural scale
+  tau <- sqrt(1/prec_tau)
+  lambda <- exp(mu.t)
+}
+
+# Data in array form for data cloning purpose
+
+Y = array(Y, dim=c(n,1))
+Y = dcdim(Y)
+
+dat = list(Y=Y, n=n, ncl=1)
+GLMM_DC_fit = dc.fit(data=dat, params=c("lambda","tau"), model=GLMM_DC,
+    n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
+summary(GLMM_DC_fit)
+
+exp(mu_true)
+tau_true
+```
+
+### Estimating the effect of a treatment from multi-center clinical trials
+
+In clinical trials, we are interested in estimating the effect of the treatment. One of the simplest forms of clinical trial is where we split a group of patients in two groups randomly. One of the group gets the treatment and the other gets a placebo.
+
+We can then estimate the difference in the outcomes. This may be done using a simple t-test if the outcome is a continuous measurement. If the patients are quite different from each other in terms of say age, blood pressure or some such physical characteristics that may affect the outcome, we adjust them by using a regression approach. We include these other covariates and the treatment/control indicator variable in the model. The effect of the treatment after adjusting for other covariates can be studied using such a regression model. 
+
+Often in practice, we may not have access to such covariates. Using random intercept model in regression is one way out of such a situation. In this case, we do consider the differences between patients but without ascribing them to any specific, known values of the covariates. The model one may consider is:
+
+\[
+Y_{i}=\beta_{0i}+\beta I_{(Treatment)}+\epsilon_{i}
+\]
+
+As we have seen in the previous example (Neyman-Scott problem), this model is non-estimable. One way to make it estimable is by using a hierarchical structure: 
+
+Hierarchy 2: $\beta_{0i}\sim N(\beta_{0},\tau^{2})$
+
+Homework: Check the validity of the following statement without doing any mathematics. You can use data cloning to do that. 
+
+This leads to estimability for $\beta$, the parameter of interest. Although it does not lead to estimation of the variances $(\tau,\sigma)$.
+
+> An approach not described in this course: We can use profile likelihood for the parameter $\beta$. This eliminates the 'nuisance parameters' $\beta_0,\tau,\sigma$. Computing the profile likelihood and quantification of uncertainty for inferences based on it for hierarchical models can be tackled using data cloning. This could be another course! 
+
+Suppose the outcome is binary, survival for 5 years vs. failure before 5 years. In this case, a convenient model is a binary regression model such as a Logistic regression model. 
+
+Hierarchy 1: 
+
+\[
+P(Y_{i}=1)=\frac{exp(\beta_{0i}+\beta I_{(Treatment)})}{1+exp(\beta_{0i}+\beta I_{(Treatment)})}
+\]
+
+Hierarchy 2: $\beta_{0i}\sim N(\beta_{0},\tau^{2})$
+
+This is an example of a Generalized Linear Mixed Model. Fortunately, for this model all parameters are estimable as we will see using data cloning. The random intercept here could be accounting for differences in the clinical centers (hospitals), assuming we have only two patients, one in control and one in the treatment group. If we have multiple patients in each group, we may include another random effect to account for differences in the patients within each group. For example, we may consider a model:
+
+Hierarchy 1: 
+
+\[
+P(Y_{ij}=1)=\frac{exp(\beta_{0i}+\beta I_{(Treatment)}+\beta_{1j})}{1+exp(\beta_{0i}+\beta I_{(Treatment)}+\beta_{1j})}
+\]
+
+Hierarchy 2: 
+$\beta_{0i}\sim N(\beta_{0},\tau^{2})$,
+$\beta_{1j}\sim N(\beta_{1},\tau^{2})$
+
+We can include interactions between random effects and so on. We will not go into these complex models in this course. 
+
+Let us see how one can modify the prototype program to analyze the random intercept Logistic regression model.
+
+Each center has one control and one treatment patient.
+
+```{r}
+n = 300      # Number of clinical centers
+mu_true = 0
+tau_true = 0.5
+delta = 1   # Treatment effect
+mu = rnorm(n, mu_true, tau_true)
+Y = cbind(
+    rbinom(n, 1, plogis(mu)),
+    rbinom(n, 1, plogis(mu+delta)))
+```
+
+We will write the Bayesian model first. Remember the normal distribution is defined in terms of the precision (inverse of the variance).
+
+```{r}
+GLMM_Bayes = function(){
+  # Likelihood
+  for (i in 1:n){
+    mu[i] ~ dnorm(mu.t,prec_tau)
+    Y[i,1] ~ dbin(ilogit(mu[i]),1)
+    Y[i,2] ~ dbin(ilogit(mu[i]+delta),1)
+  }
+  # Priors
+  mu.t ~ dnorm(0, 0.01)
+  prec_tau ~ dgamma(0.1, 0.1)
+  delta ~ dnorm(0, 0.1)
+  # Parameters on the natural scale
+  tau <- sqrt(1/prec_tau)
+}
+
+dat = list(Y=Y, n=n)
+GLMM_Bayes_fit = jags.fit(data=dat, params=c("delta","mu.t","tau"), model=GLMM_Bayes)
+summary(GLMM_Bayes_fit)
+```
+
+We will modify this to get the MLE using data cloning.
+
+```{r}
+GLMM_DC = function(){
+  # Likelihood
+  for (k in 1:ncl){
+    for (i in 1:n){
+      mu[i,k] ~ dnorm(mu.t,prec_tau)
+      Y[i,1,k] ~ dbin(ilogit(mu[i,k]),1)
+      Y[i,2,k] ~ dbin(ilogit(mu[i,k]+delta),1)
+    }
+  }
+  # Priors
+  mu.t ~ dnorm(0, 0.01)
+  prec_tau ~ dgamma(0.1, 0.1)
+  delta ~ dnorm(0, 0.1)
+  # Parameters on the natural scale
+  tau <- sqrt(1/prec_tau)
+}
+
+Y = array(Y, dim=c(dim(Y),1))
+Y = dcdim(Y)
+dat = list(Y=Y, n=n, ncl=1)
+
+GLMM_DC_fit = dc.fit(data=dat, params=c("delta","mu.t","tau"), model=GLMM_DC,
+    n.clones=c(1, 2, 5), unchanged="n", multiply="ncl")
+
+summary(GLMM_DC_fit)
+pairs(GLMM_DC_fit)
+dcdiag(GLMM_DC_fit)
+plot(dcdiag(GLMM_DC_fit))
+```
+
+Following is a real data set on multi-center clinical trials. Number of patients in the treatment are `"nt"` and those who survived are `"rt"`. Similarly `"nc"` are the number of patients in the control group and `"rc"` are the ones that survived. 
+
+```{r}
+OR.data = list(
+    "rt" =
+        c(3, 7, 5, 102, 28, 4, 98, 60, 25, 138, 64, 45, 9, 57, 25, 33, 
+        28, 8, 6, 32, 27, 22),
+    "nt" =
+        c(38, 114, 69, 1533, 355, 59, 945, 632, 278, 1916, 873, 263, 
+        291, 858, 154, 207, 251, 151, 174, 209, 391, 680),
+    "rc" =
+        c(3, 14, 11, 127, 27, 6, 152, 48, 37, 188, 52, 47, 16, 45, 31, 
+        38, 12, 6, 3, 40, 43, 39),
+    "nc" =
+        c(39, 116, 93, 1520, 365, 52, 939, 471, 282, 1921, 583, 266, 
+        293, 883, 147, 213, 122, 154, 134, 218, 364, 674),
+    "Num" =
+        22)
+```
+
+The model functions for DD are as follows.
+
+```{r}
+DC.MLE.fn = function() {
+  for (k in 1:ncl){
+    for (i in 1:Num) {
+      rt[i,k] ~ dbin(pt[i,k], nt[i,k])
+      rc[i,k] ~ dbin(pc[i,k], nc[i,k])
+      logit(pc[i,k]) <- mu[i,k] 
+      logit(pt[i,k]) <- mu[i,k] + delta
+      mu[i,k] ~ dnorm(alpha,tau1)
+    }
+  }
+  # Priors 
+  parms ~ dmnorm(MuP, PrecP)
+  delta <- parms[1]
+  tau1 <- exp(parms[3])
+  sigma1 <- 1/sqrt(tau1)
+  alpha <- parms[2]
+}
+
+# Analysis
+rt = dcdim(array(OR.data$rt, dim=c(22,1)))
+nt = dcdim(array(OR.data$nt, dim=c(22,1)))
+rc = dcdim(array(OR.data$rc, dim=c(22,1)))
+nc = dcdim(array(OR.data$nt, dim=c(22,1)))
+Num = OR.data$Num
+
+dat = list(rt=rt, rc=rc, nt=nt, nc=nc, Num=Num, ncl=1, 
+    MuP=rep(0, 3), PrecP=diag(0.01, 3, 3))
+
+DC.MLE = dc.fit(data=dat, params="parms", model=DC.MLE.fn,
+    n.clones=c(1, 4, 16),
+    multiply="ncl", unchanged=c("Num","MuP","PrecP"),
+    n.chains=5, n.update=1000, n.iter=5000, n.adapt=2000)
+
+# Check the convergence and MLE estimates etc.
+summary(DC.MLE)
+dctable(DC.MLE)
+dcdiag(DC.MLE)
+```
+
+It should be clear by now that we can modify any Bayesian analysis to get Maximum likelihood estimate quite easily by adding one dimension to the data and a do loop over the clones. 
+
+In the next part, we will discuss how to analyzed time series data. 
