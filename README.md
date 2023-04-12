@@ -38,6 +38,16 @@ Follow [instructions](setup.md) to set up your laptop, or wait for the link for 
 
 Read the [notes](./prior/) about statistical concepts and the workflow we will rely on, and play with the [Shiny app](./app/).
 
+## During the course
+
+If you are using your own computer, download the [zipped](https://github.com/datacloning/workshop-2023-edmonton/archive/refs/heads/main.zip) version or clone it with `git clone https://github.com/datacloning/workshop-2023-edmonton.git`.
+
+You can use our cloud server as well, you will receive login information in email.
+
+## After the course
+
+You will receive a link to a short follow up survey.
+
 ## Resources
 
 | Topic    | Links |
