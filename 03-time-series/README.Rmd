@@ -1,0 +1,428 @@
+---
+title: "Time series and spatial data"
+output:
+  github_document:
+    math_method:
+      engine: webtex
+      url: https://latex.codecogs.com/svg.image?
+---
+
+```{r include=FALSE}
+set.seed(0)
+```
+
+## Introduction
+
+In this part, we will demonstrate how one can use MCMC and data cloning to analyze time series data sets. These examples can be extended to longitudinal data sets, spatial data sets quite easily.
+
+These models also tend to have missing observations. The code can be modified easily to account for the missing observations for estimating the parameters. We may also want to _predict_ the values of the missing observations. We will demonstrate how to predict missing data or forecast future observations. 
+
+## Auto-regression of order 1 (AR(1) process)
+
+This is one of the most basic time series models. The AR(1) model can be written as:
+
+\[
+Y_{i}=\rho Y_{i-1}+\epsilon_{i}
+\]
+
+where $i=1,2,...,n$ and $\epsilon_i\sim N(0,\sigma^{2})$ are indepedent random variables (_N_ is shorthand for the Normal distribution). 
+
+This model says that the next year's value is related to the past year's value. That is, the value in the past year is a good predictor for the next year's value. Hence the term 'auto-regression'. This model can be used to model many different phenomena that proceed in time. For example, tomorrow's temperature can be predicted using today's temperature (except in Alberta!). Next day's stock price is likely to be related to today's price and so on. 
+
+This model can be modified to include covariates. Hence, we can write:
+
+\[
+Y_{i}=X_{i}\beta+\rho(Y_{i-1}-X_{i-1}\beta)+\epsilon_{i}
+\]
+
+This allows for correlated environmental noise in regression.
+
+This model has been used to model changes in wildlife populations. It is useful in epidemiology and so on. Many econometric models are derived from this basic model.
+
+Of course, reality is most of the times more complicated than this model. For example, one may not observe the response without error. This is called an observation error. We may not (most of the times, we will not) observe the true population size but only an estimate (or an index) of the true population size. Thus, the observed value is not the true response. Such cases are modelled using a hierarchical structure:
+
+- Hierarchy 1 (True state model): $X_{i}=\rho X_{i-1}+\epsilon_{i}$
+- Hierarchy 2 (Observation model): $Y_i = X_i + \eta_i$ where $\eta_i$ is observation error and $\eta_i\sim N(0,\tau^2)$ are independent random variables
+
+This is what is called a 'Kalman filter' after a famous Hungarian electrical engineer, Professor Rudolf Kalman. This is a particular case of the model class 'State space models'. They consist of at least two hierarchies: one models the true underlying phenomenon and the other the observation process that models the error due to observation process. 
+
+Under the Normal distribution assumption, the mathematics can be worked out for the simple linear model to conduct the likelihood inference. But once we enter the non-linear time series modelling or non-Gaussian observation processes, mathematics become nearly impossible. We will see an example of this a bit later. It will also illustrate why the MCMC algorithm is considered one of the greatest inventions in modern science. 
+
+For the time being, let us avoid all the mathematics and see if we can use JAGS and dclone to conduct the statistical analysis. 
+
+> No math please!!! -- this is our motto.
+
+```{r}
+library(dclone)
+T_max = 100  # Number of time steps
+rho = 0.3
+sigma.e = 1
+tau.e = 0.25
+X = rep(0, T_max)
+
+# This is the stationary distribution for the AR(1) process
+X[1] = rnorm(1, 0, sigma.e/sqrt(1-rho^2))
+
+for (t in 2:(T_max)){
+  X[t] = rho*X[t-1] + rnorm(1, 0, sigma.e)
+}
+
+# Add observation error
+Y = rnorm(length(X), X, tau.e)
+
+plot(Y, type="l", lty=2, xlab="Time", ylab="Value")
+lines(X)
+legend("topleft", lty=c(1, 2), legend=c("True", "Observed"))
+```
+
+We will start with the Bayesian approach.
+
+```{r}
+AR1_Bayes_model = function(){
+  # Likelihood
+  prec.1 <- (1-rho*rho) * prec.e
+  X[1] ~ dnorm(0, prec.1)
+  Y[1] ~ dnorm(X[1], prec.t)
+  for (t in 2:T_max){
+    mu[t] <- rho * X[(t-1)]
+    X[t] ~ dnorm(mu[t], prec.e)
+    Y[t] ~ dnorm(X[t], prec.t)
+  }
+  # Priors
+  rho ~ dunif(-1, 1)
+  prec.e ~ dgamma(0.1, 0.1)
+  prec.t ~ dgamma(0.1, 0.1)
+}
+```
+
+Get the data and run the analysis.
+
+```{r}
+Y = as.vector(Y)
+dat = list(Y=Y, T_max=T_max)
+ini = list(X=Y)
+AR1_Bayes_fit = jags.fit(data=dat, params=c("rho","prec.e","prec.t"), model=AR1_Bayes_model)
+
+summary(AR1_Bayes_fit)
+plot(AR1_Bayes_fit)
+```
+
+We will modify this to get the MLE using data cloning.
+
+```{r}
+AR1_DC_model = function(){
+  # Likelihood
+  for (k in 1:ncl){
+    X[1,k] ~ dnorm(0, prec.1)
+    Y[1,k] ~ dnorm(X[1,k], prec.t)
+    for (t in 2:T_max){
+        mu[t,k] <- rho*X[(t-1),k]
+        X[t,k] ~ dnorm(mu[t,k], prec.e)
+        Y[t,k] ~ dnorm(X[t,k], prec.t)
+    }
+  }
+  # Priors
+  rho ~ dunif(-1, 1)
+  prec.e ~ dgamma(0.1, 0.1)
+  prec.t ~ dgamma(0.1, 0.1)
+  prec.1 <- (1-rho*rho) * prec.e
+}
+```
+
+Get the data and run the analysis with data cloning.
+
+```{r}
+Y = array(Y, dim=c(length(Y), 1))
+Y = dcdim(Y)
+dat = list(Y=Y, T_max=T_max, ncl=1)
+ini = list(X=Y)
+initfn = function(model, n.clones){
+  return(list(X=dclone(Y, n.clones)))
+}
+AR1_DC_fit = dc.fit(data=dat,params=c("rho","prec.t","prec.e"),model=AR1_DC_model,
+    unchanged="T_max",multiply="ncl",
+    n.clones=c(1, 10, 20),
+    inits=ini, initsfun=initfn)
+
+summary(AR1_DC_fit)
+dcdiag(AR1_DC_fit)
+plot(dcdiag(AR1_DC_fit))
+```
+
+Try running the above code when true `rho=0`.
+
+- Are the parameters estimable? 
+- Does the Bayesian approach tell you that? 
+
+Without the estimability diagnostics, you could be easily mislead by the Bayesian approach. You will merrily go around with the scientific inference when the parameters are not estimable.
+
+
+## Different types of measurement errors
+
+1: Clipped or Censored time series
+
+Suppose the underlying process is AR(1) but the observed process is a clipped process such that it is 1 if $X$ is positive and 0 if $X$ is negative. This is called a clipped time series. Similarly you may observe $Y$ to belong to an interval. This is an interval censored data. The above model can be modified to accommodate such a process. An easier way to model binary, count or proportion time series is as follows.
+
+### Modelling binary and count data time series
+
+For modelling binary time series, we can consider the observation process as:
+
+$Y_{t}\sim Bernoulli(p_{t})$ where $log(\frac{p_{t}}{1-p_{t}})=\gamma*X_{t}$
+
+For modelling count data time series, we can consider
+
+$Y_{t}\sim Poisson(\lambda_{t})$ where $log\lambda_{t}=\gamma*X_{t}$.
+
+This is a time series generalization of the GLMM that we considered before.  
+
+_Caveat_: It is extremely important that you check for the estimability of the parameters for these models. Because of clipping and other observation processes, you are more likely to run into estimability issues. As far as we know, data cloning is the only method that allows estimability diagnostics as part of the estimation process. See Lele ([2010](https://github.com/datacloning/workshop-2023-edmonton/blob/main/docs/lele-2010-built-on-sand.pdf)). 
+
+### Non-linear time series analysis
+
+Now we will consider a non-linear time series model, Beverton-Holt growth model, that is commonly used in ecology. 
+
+In ecology and population biology, one wants to understand how abundance changes over time. Following Malthus' thinking, it is also evident that, in a finite environment, abundance cannot increase without limit.
+
+Thus, the growth is usually exponential at the beginning (low population, ignore the Allee effect for now) and then it slows down as we approach the carrying capacity. One commonly used model is the Beverton-Holt model (discrete analog to the continuous Logistic model):
+
+Let $log(N_{t})=X_{t}$ where $N_t$ is the abundance at time $t$. A general form for the population growth models is: 
+
+$X_{t}=m_{t}+\sigma Z_{t}$
+
+where $Z_t$ is $Normal(0,1)$ random variable. This is similar to the AR(1) process but with a non-linear mean structure. 
+
+If $m_{t}=log(\lambda)+x_{t}-log(1+\beta N_{t})$, the population growth model is called the Beverton-Holt model. It has an upper limit $K=\frac{\lambda-1}{\beta}$ called the Carrying capacity, the maximum population size that can be attained (with some perturbation). 
+
+In practice, we usually have to conduct some sampling to _estimate_ the abundance. Hence there is measurement error. We can represent this process by using hierarchical model:
+
+- Hierarchy 1: Process model, $X_{t}|X_{t-1}=x_{t-1}\sim Normal(m(x_{t-1}),\sigma^{2})$
+- Hierarchy 2: Observation model, $Y_{t}|N_{t}\sim Poisson(N_{t})$
+
+One can use other observation models as well. We can write the likelihood function for this using a $T_{max}$ (length of the time series) dimensional integral. If the time series is of length 30, this will be a 30 dimensional integral. In order to compute the MLE, we will need to evaluate this integral repeatedly until the numerical optimization routine converges. This is a nearly impossible task.
+
+The code to analyze this non-linear time series with non-Gaussian observation error can be written as follows.
+
+```{r}
+BH_Bayes_fn= function() {
+  # Likelihood
+  X[1] ~ dnorm(mu0, 1 / sigma^2) # Initial condition
+  for(i in 2:(n+1)){
+    Y[(i-1)] ~ dpois(exp(X[i])) 
+    X[i] ~ dnorm(mu[i], 1 / sigma^2) 
+    mu[i] <- X[(i-1)] + log(lambda) - log(1 + beta * exp(X[(i-1)]))
+  }
+
+  # Priors on model parameters: They are on the real line.
+  ln.beta ~ dnorm(0, 0.1) 
+  ln.sigma ~ dnorm(0, 0.1)
+  ln.tmp ~ dnorm(0, 0.1)
+
+  # Parameters on the natural scale
+  beta <- exp(ln.beta)
+  sigma <- exp(ln.sigma)
+  tmp <- exp(ln.tmp)
+  lambda <- tmp + 1
+  mu0 <- log(2)  + log(lambda) - log(1 + beta * 2)
+}
+```
+
+Gause's _Paramecium_ data.
+
+```{r}
+Paramecium = c(17,29,39,63,185,258,267,392,510,570,650,560,575,650,550,480,520,500)
+plot(Paramecium, type="b")
+```
+
+Bayesian analysis.
+
+```{r}
+Y = Paramecium
+dat = list(n=length(Y), Y=Y)
+BH_Bayes_fit = jags.fit(data=dat, params=c("ln.tmp","ln.beta","ln.sigma"), model=BH_Bayes_fn)
+
+summary(BH_Bayes_fit)
+```
+
+We can easily modify this program to obtain the MLE and its asymptotic variance. 
+
+```{r}
+BH_DC_fn= function() {
+  # Likelihood
+  for (k in 1:ncl) {
+    for(i in 2:(n+1)){
+      Y[(i-1), k] ~ dpois(exp(X[i, k])) 
+      X[i, k] ~ dnorm(mu[i, k], 1 / sigma^2) 
+      mu[i, k] <- X[(i-1), k] + log(lambda) - log(1 + beta * exp(X[(i-1), k]))
+    }
+    X[1, k] ~ dnorm(mu0, 1 / sigma^2) 
+  }
+
+  # Priors on model parameters: They are on the real line.
+  ln.beta ~ dnorm(0, 0.1) 
+  ln.sigma ~ dnorm(0, 0.1)
+  ln.tmp ~ dnorm(0, 0.1)
+
+  # Parameters on the natural scale
+  beta <- exp(ln.beta)
+  sigma <- exp(ln.sigma)
+  tmp <- exp(ln.tmp)
+  lambda <- tmp + 1
+  mu0 <- log(2)  + log(lambda) - log(1 + beta * 2)
+}
+```
+
+Assemble the data and fit with data cloning.
+
+```{r}
+Y = array(Y, dim=c(length(Y), 1))
+Y = dcdim(Y)
+dat = list(ncl=1, n=18, Y=Y)
+
+n.clones = c(1, 5, 10)
+params = c("ln.tmp", "ln.beta", "ln.sigma")
+BH_MLE = dc.fit(data=dat, params=params, model=BH_DC_fn,
+    n.clones=n.clones,
+    multiply="ncl", unchanged="n",
+    n.chains=5, n.update=1000, n.iter=5000, n.adapt=2000)
+
+dcdiag(BH_MLE)
+```
+
+Parameters for this model are estimable. It will be interesting to see if one can use Negative Binomial distribution (one additional parameter) instead of the Poisson distribution. Are the parameters still estimable? (TBD!!!)
+
+## Prediction
+
+We are also interested in predicting the true population abundances as well as forecasting the future trajectory of the abundances. This is quite easy under the Bayesian paradigm. The frequentist paradigm involves an additional step. 
+
+Let us see how to use the Bayesian paradigm and MCMC to do this. In the Bayesian paradigm, there is no difference between parameters and the unobserved states. They both are considered random variables. 
+
+On the other hand, in the frequentist paradigm parameters are fixed but unknown (not random) whereas the unobserved states are true random variables.
+
+We (the instructors) consider these to be different.
+
+1. Information about the parameters converges to infinity as the sample size increases. Thus, we can _estimate_ them with high degree of confidence. The _confidence_ intervals shrink as we increase the sample size.
+2. Information about the states (random variables) does not converge to infinity as the sample size increases. The _prediction_ intervals do not shrink. 
+
+This should be familiar to most of you from your regression class. 
+
+```{r}
+BH_Bayes_fn= function() {
+  # Likelihood
+  X[1] ~ dnorm(mu0, 1 / sigma^2) # Initial condition
+  N[1] <- exp(X[1])
+  for(i in 2:(n+1)){
+    Y[(i-1)] ~ dpois(exp(X[i])) 
+    X[i] ~ dnorm(mu[i], 1 / sigma^2) 
+    mu[i] <- X[(i-1)] + log(lambda) - log(1 + beta * exp(X[(i-1)]))
+    N[i] <- exp(X[i])
+  }
+
+  # Priors on model parameters: They are on the real line.
+  ln.beta ~ dnorm(0, 0.1) 
+  ln.sigma ~ dnorm(0, 0.1)
+  ln.tmp ~ dnorm(0, 0.1)
+
+  # Parameters on the natural scale
+  beta <- exp(ln.beta)
+  sigma <- exp(ln.sigma)
+  tmp <- exp(ln.tmp)
+  lambda <- tmp + 1
+  mu0 <- log(2)  + log(lambda) - log(1 + beta * 2)
+}
+
+# Gause's data 
+Y = Paramecium
+dat = list(n=length(Y), Y=Y)
+BH_Bayes_fit = jags.fit(data=dat, params=c("N"), model=BH_Bayes_fn)
+
+summary(BH_Bayes_fit)
+
+boxplot(unname(as.matrix(BH_Bayes_fit)), range=0, border="darkgrey")
+lines(c(NA, Y))
+```
+
+If we want to obtain predictions that are invariant to parameterization and correct in the frequentist sense, we need to modify this approach slightly. We need to change the prior distribution to the asymptotic distribution of the MLE. This can be done quite easily as follows. 
+
+```{r}
+BH_DC_pred_fn= function() {
+  # Likelihood
+  X[1] ~ dnorm(mu0, 1 / sigma^2) # Initial condition
+  N[1] <- exp(X[1])
+  for(i in 2:(n+1)){
+    Y[(i-1)] ~ dpois(exp(X[i])) 
+    X[i] ~ dnorm(mu[i], 1 / sigma^2) 
+    mu[i] <- X[(i-1)] + log(lambda) - log(1 + beta * exp(X[(i-1)]))
+    N[i] <- exp(X[i])
+  }
+
+  # Priors on model parameters: they are on the real line.
+  parms ~ dmnorm(MuPost,PrecPost)
+  ln.beta <- parms[1] 
+  ln.sigma <- parms[2]
+  ln.tmp <- parms[3]
+
+  # Parameters on the natural scale
+  beta <- exp(ln.beta)
+  sigma <- exp(ln.sigma)
+  tmp <- exp(ln.tmp)
+  lambda <- tmp + 1
+  mu0 <- log(2)  + log(lambda) - log(1 + beta * 2)
+}
+
+# Gause's data 
+Y = Paramecium
+dat = list(n=length(Y), Y=Y, MuPost=coef(BH_MLE), PrecPost=solve(vcov(BH_MLE)))
+BH_DC_Pred = jags.fit(data=dat, params=c("N"), model=BH_DC_pred_fn)
+
+summary(BH_DC_Pred)
+
+boxplot(unname(as.matrix(BH_DC_Pred)), range=0, border="darkgrey")
+lines(c(NA, Y))
+```
+
+If we want to forecast future observations, we modify the program slightly. To do this, we pretend as if the process had run longer than $T_{max}$ but we could not 'observe' those future states. Thus, it becomes a missing data problem. Let us see how we can do this.
+
+```{r}
+BH_Bayes_fn= function() {
+  X[1] ~ dnorm(mu0, 1 / sigma^2) # Initial condition
+  N[1] <- exp(X[1])
+  for(i in 2:(n+1)){
+    Y[(i-1)] ~ dpois(exp(X[i]))
+  }
+  for (i in 2:N_future){
+    X[i] ~ dnorm(mu[i], 1 / sigma^2) 
+    mu[i] <- X[(i-1)] + log(lambda) - log(1 + beta * exp(X[(i-1)]))
+    N[i] <- exp(X[i])
+  }
+
+  # Priors on model parameters: they are on the real line.
+  ln.beta ~ dnorm(0, 0.1) 
+  ln.sigma ~ dnorm(0, 0.1)
+  ln.tmp ~ dnorm(0, 0.1)
+
+  # Parameters on the natural scale
+  beta <- exp(ln.beta)
+  sigma <- exp(ln.sigma)
+  tmp <- exp(ln.tmp)
+  lambda <- tmp + 1
+  mu0 <- log(2)  + log(lambda) - log(1 + beta * 2)
+}
+
+# Gause's data 
+Y = Paramecium
+
+# We want to predict 3 years in future.
+dat = list(n=length(Y), Y=Y, N_future=length(Y)+3)
+
+BH_Bayes_fit = jags.fit(data=dat, params=c("N[19:21]"), model=BH_Bayes_fn)
+
+summary(BH_Bayes_fit)
+
+pred = mcmcapply(BH_Bayes_fit, quantile, c(0.05, 0.5, 0.95))
+plot(c(Y, NA, NA, NA), type="l", ylim=c(0, max(Y, pred)), xlab="Time", ylab="Value")
+matlines(c(18:21), 
+    t(cbind(rep(Y[length(Y)], 3), pred)),
+    col=4, lty=c(2,1,2))
+```
+
+To get the frequentist version, we modify this prediction function similarly. The prior is equal to the asymptotic distribution of the MLE. We will leave it to you to try that out.
