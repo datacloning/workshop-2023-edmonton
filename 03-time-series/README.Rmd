@@ -8,7 +8,7 @@ output:
 ---
 
 ```{r include=FALSE}
-set.seed(0)
+set.seed(1)
 ```
 
 ## Introduction
@@ -54,7 +54,7 @@ For the time being, let us avoid all the mathematics and see if we can use JAGS 
 
 ```{r}
 library(dclone)
-T_max = 100  # Number of time steps
+T_max = 200  # Number of time steps
 rho = 0.3
 sigma.e = 1
 tau.e = 0.25
