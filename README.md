@@ -50,10 +50,15 @@ You will receive a link to a short follow up survey.
 
 ## Resources
 
+The rendered GitHub pages in this repository are best viewed _without_ dark mode. This way all the mathematical notation will be legible.
+
 | Topic    | Links |
 | -------- | ------- |
 | Setup  | [Instructions](setup.md)  |
-| Preliminaries  | [Notes](./01-intro/), [App](./app/)  |
+| Part 1. Preliminaries  | [Notes](./01-intro/), [App](./app/)  |
+| Part 2. Mixed models  | [Notes](./02-mixed-models/)  |
+| Part 3. Time series  | [Notes](./03-time-series/)  |
+| Part 4. Practical considerations  | [Notes](./04-other/)  |
 | References  | [PDF files](./docs/)  |
 
 ## License
