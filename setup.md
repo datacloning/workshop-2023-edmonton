@@ -12,7 +12,7 @@ sudo apt update -qq && sudo apt install --yes --no-install-recommends jags
 brew install jags
 ```
 
-Windows: download the installed from [here](https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/).
+Windows: download the installer from [here](https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/).
 
 ## Install R packages
 

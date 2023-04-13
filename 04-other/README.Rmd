@@ -1,0 +1,164 @@
+---
+title: "Other considerations"
+output:
+  github_document:
+    math_method:
+      engine: webtex
+      url: https://latex.codecogs.com/svg.image?
+---
+
+```{r include=FALSE}
+set.seed(0)
+```
+
+## What is going on inside jags.fit
+
+```{r}
+library(dclone)
+
+n = 30
+X1 = rnorm(n)
+X = model.matrix(~X1)
+beta.true = c(0.5, 1)
+link_mu = X %*% beta.true
+
+# Linear regression model
+mu = link_mu
+sigma.e = 1
+Y = rnorm(n,mean=mu,sd=sigma.e)
+
+Normal.model = function(){
+  # Likelihood 
+  for (i in 1:n){
+    mu[i] <- X[i,] %*% beta
+    Y[i] ~ dnorm(mu[i],prec.e)
+  }
+  # Prior
+  beta[1] ~ dnorm(0, 1)
+  beta[2] ~ dnorm(0, 1)
+  prec.e ~ dlnorm(0, 1)
+}
+
+dat = list(Y=Y, X=X, n=n)
+
+Normal.Bayes = jags.fit(data=dat, params=c("beta","prec.e"), model=Normal.model)
+```
+
+What just happened? `jags.fit` is a wrapper around some rjags functions.
+
+```{r}
+m <- jagsModel(file = Normal.model, data=dat, n.chains=3)
+m
+str(m)
+str(m$state())
+m$iter()
+
+update(m, n.iter=1000)
+str(m$state())
+m$iter()
+
+s = codaSamples(m, variable.names=c("beta","prec.e"), n.iter=5000)
+str(s)
+head(s)
+m$iter()
+
+update(m, n.iter=1000)
+m$iter()
+
+s = codaSamples(m, variable.names=c("beta","prec.e"), n.iter=5000)
+head(s)
+m$iter()
+```
+
+Can we further update `Normal.Bayes`?
+
+```{r}
+m2 <- updated.model(Normal.Bayes)
+m2$iter()
+update(m2, n.iter=1000)
+m2$iter()
+```
+
+Couple of things to cover here:
+
+```{r}
+str(formals(jags.fit))
+```
+
+Implicitly, we do:
+
+```{r}
+Normal.Bayes = jags.fit(
+    data=dat, 
+    params=c("beta","prec.e"),
+    model=Normal.model,
+    inits=NULL,
+    n.chains=3,
+    n.adapt=1000,
+    n.update=1000,
+    thin=1,
+    n.iter=5000,
+    updated.model=TRUE)
+```
+
+## Working with MCMC lists
+
+```{r}
+mcmcapply(Normal.Bayes, sd)
+
+mcmcapply(Normal.Bayes, quantile, c(0.05, 0.5, 0.95))
+quantile(Normal.Bayes, c(0.05, 0.5, 0.95))
+
+str(as.matrix(Normal.Bayes))
+```
+
+## We need to talk about RNGs
+
+```{r}
+library(rjags)
+str(parallel.seeds("base::BaseRNG", 5))
+
+## The lecuyer module provides the RngStream factory, which allows large
+## numbers of independent parallel RNGs to be generated. 
+load.module("lecuyer")
+list.factories(type="rng")
+str(parallel.seeds("lecuyer::RngStream", 5))
+```
+
+## Can we run chains in parallel?
+
+```{r}
+system.time({
+    Normal.Bayes = jags.fit(
+        data=dat, params=c("beta","prec.e"), model=Normal.model,
+        n.chains=4,
+        n.update=10^6)
+})
+
+system.time({
+    Normal.Bayes = jags.parfit(
+        cl=10,
+        data=dat, params=c("beta","prec.e"), model=Normal.model,
+        n.chains=4,
+        n.update=10^6)
+})
+```
+
+## I like DC but I don't have time ...
+
+Well, check `dc.parfit`
+
+```{r}
+## determine the number of workers needed
+clusterSize(1:5)
+
+## visually compare balancing options
+opar <- par(mfrow=c(2, 2))
+plotClusterSize(2,1:5, "none")
+plotClusterSize(2,1:5, "load")
+plotClusterSize(2,1:5, "size")
+plotClusterSize(2,1:5, "both")
+par(opar)
+```
+
+Parallel chains, size balancing, both.

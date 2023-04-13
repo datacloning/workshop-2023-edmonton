@@ -38,12 +38,27 @@ Follow [instructions](setup.md) to set up your laptop, or wait for the link for 
 
 Read the [notes](./prior/) about statistical concepts and the workflow we will rely on, and play with the [Shiny app](./app/).
 
+## During the course
+
+If you are using your own computer, download the [zipped](https://github.com/datacloning/workshop-2023-edmonton/archive/refs/heads/main.zip) version or clone it with `git clone https://github.com/datacloning/workshop-2023-edmonton.git`.
+
+You can use our cloud server as well, you will receive login information in email.
+
+## After the course
+
+You will receive a link to a short follow up survey.
+
 ## Resources
+
+The rendered GitHub pages in this repository are best viewed _without_ dark mode. This way all the mathematical notation will be legible.
 
 | Topic    | Links |
 | -------- | ------- |
 | Setup  | [Instructions](setup.md)  |
-| Preliminaries  | [Notes](./01-intro/), [App](./app/)  |
+| Part 1. Preliminaries  | [Notes](./01-intro/), [App](./app/)  |
+| Part 2. Mixed models  | [Notes](./02-mixed-models/)  |
+| Part 3. Time series  | [Notes](./03-time-series/)  |
+| Part 4. Practical considerations  | [Notes](./04-other/)  |
 | References  | [PDF files](./docs/)  |
 
 ## License
