@@ -112,8 +112,8 @@ Occ.model.dc = function(){
   # Likelihood 
   for(k in 1:ncl){
     for (i in 1:n){
-        W[i,k] ~ dbin(p_det, 1)
-        Y[i,k] ~ dbin(phi_occ, 1)
+        W[i,k] ~ dbin(phi_occ, 1)
+        Y[i,k] ~ dbin(W[i,k] * p_det, 1)
     }
   }
   # Prior
@@ -154,6 +154,7 @@ Occ.DC = dc.fit(data=dat, params=c("phi_occ","p_det"), model=Occ.model.dc,
     inits=ini, initsfun=initfn)
 summary(Occ.DC)
 plot(Occ.DC)
+pairs(Occ.DC)
 ```
 
 There are a couple of diagnostic tools available in 'dclone' for the non-estimability issue. 
@@ -236,7 +237,7 @@ Occ.model.dc = function(){
     for (i in 1:n){
       W[i,k] ~ dbin(phi_occ, 1)
       for (j in 1:v){
-        Y[i,j,k] ~ dbin(p_det * W[i,k], 1)
+        Y[i,j,k] ~ dbin(W[i,k] * p_det, 1)
       }
     }
   }
@@ -267,6 +268,8 @@ Occ.DC = dc.fit(data=dat, params=c("phi_occ","p_det"), model=Occ.model.dc,
     inits=ini, initsfun=initfn)
 summary(Occ.DC)
 plot(Occ.DC)
+pairs(Occ.DC)
+
 dcdiag(Occ.DC)
 plot(dcdiag(Occ.DC))
 ```

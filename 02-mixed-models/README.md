@@ -173,14 +173,14 @@ summary(Occ.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean     SD Naive SE Time-series SE
-    ## p_det   0.5354 0.2260 0.001845       0.008623
-    ## phi_occ 0.5075 0.2217 0.001810       0.010029
+    ## p_det   0.5151 0.2272 0.001855       0.009616
+    ## phi_occ 0.5337 0.2309 0.001885       0.011274
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## p_det   0.1816 0.3479 0.5057 0.7151 0.9642
-    ## phi_occ 0.1723 0.3285 0.4689 0.6715 0.9579
+    ## p_det   0.1762 0.3270 0.4751 0.6895 0.9670
+    ## phi_occ 0.1799 0.3402 0.5011 0.7238 0.9693
 
 ``` r
 plot(Occ.Bayes)
@@ -255,8 +255,8 @@ Occ.model.dc = function(){
   # Likelihood 
   for(k in 1:ncl){
     for (i in 1:n){
-        W[i,k] ~ dbin(p_det, 1)
-        Y[i,k] ~ dbin(phi_occ, 1)
+        W[i,k] ~ dbin(phi_occ, 1)
+        Y[i,k] ~ dbin(W[i,k] * p_det, 1)
     }
   }
   # Prior
@@ -348,7 +348,7 @@ Occ.DC = dc.fit(data=dat, params=c("phi_occ","p_det"), model=Occ.model.dc,
     ## Graph information:
     ##    Observed stochastic nodes: 30
     ##    Unobserved stochastic nodes: 32
-    ##    Total graph size: 65
+    ##    Total graph size: 95
     ## 
     ## Initializing model
     ## 
@@ -361,7 +361,7 @@ Occ.DC = dc.fit(data=dat, params=c("phi_occ","p_det"), model=Occ.model.dc,
     ## Graph information:
     ##    Observed stochastic nodes: 60
     ##    Unobserved stochastic nodes: 62
-    ##    Total graph size: 125
+    ##    Total graph size: 185
     ## 
     ## Initializing model
     ## 
@@ -374,7 +374,7 @@ Occ.DC = dc.fit(data=dat, params=c("phi_occ","p_det"), model=Occ.model.dc,
     ## Graph information:
     ##    Observed stochastic nodes: 150
     ##    Unobserved stochastic nodes: 152
-    ##    Total graph size: 305
+    ##    Total graph size: 455
     ## 
     ## Initializing model
 
@@ -392,21 +392,27 @@ summary(Occ.DC)
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##           Mean      SD   DC SD  Naive SE Time-series SE R hat
-    ## p_det   0.4976 0.28992 0.64828 0.0023672      0.0023891     1
-    ## phi_occ 0.2372 0.03467 0.07753 0.0002831      0.0003587     1
+    ##           Mean     SD  DC SD Naive SE Time-series SE R hat
+    ## p_det   0.4981 0.2202 0.4924 0.001798        0.01934 1.025
+    ## phi_occ 0.5582 0.2268 0.5072 0.001852        0.02426 1.042
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## p_det   0.0219 0.2437 0.4996 0.7508 0.9741
-    ## phi_occ 0.1716 0.2136 0.2364 0.2598 0.3077
+    ## p_det   0.2177 0.3142 0.4388 0.6540 0.9622
+    ## phi_occ 0.2227 0.3583 0.5332 0.7485 0.9735
 
 ``` r
 plot(Occ.DC)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+``` r
+pairs(Occ.DC)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 There are a couple of diagnostic tools available in ‘dclone’ for the
 non-estimability issue.
@@ -416,9 +422,9 @@ dcdiag(Occ.DC)
 ```
 
     ##   n.clones lambda.max  ms.error  r.squared    r.hat
-    ## 1        1 0.08331270 0.1545713 0.01613750 1.000252
-    ## 2        2 0.08272574 0.1548808 0.01353781 1.000144
-    ## 3        5 0.08405302 0.1435564 0.01205429 1.000359
+    ## 1        1 0.08999909 0.2401173 0.02177118 1.012580
+    ## 2        2 0.08874350 0.1972214 0.02208530 1.026601
+    ## 3        5 0.09483718 0.1788158 0.02119207 1.042230
 
 ``` r
 dcdiag(Occ.DC) |> plot()
@@ -527,14 +533,14 @@ summary(Occ.Bayes)
     ##    plus standard error of the mean:
     ## 
     ##           Mean     SD Naive SE Time-series SE
-    ## p_det   0.4897 0.1882 0.001537       0.005513
-    ## phi_occ 0.2951 0.1613 0.001317       0.006542
+    ## p_det   0.4809 0.1906 0.001556       0.005483
+    ## phi_occ 0.3018 0.1634 0.001334       0.006097
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##            2.5%    25%    50%    75%  97.5%
-    ## p_det   0.14242 0.3481 0.4878 0.6337 0.8350
-    ## phi_occ 0.09779 0.1874 0.2564 0.3548 0.7631
+    ## p_det   0.14061 0.3313 0.4816 0.6242 0.8370
+    ## phi_occ 0.09793 0.1894 0.2617 0.3651 0.7624
 
 ``` r
 plot(Occ.Bayes)
@@ -560,7 +566,7 @@ Occ.model.dc = function(){
     for (i in 1:n){
       W[i,k] ~ dbin(phi_occ, 1)
       for (j in 1:v){
-        Y[i,j,k] ~ dbin(p_det * W[i,k], 1)
+        Y[i,j,k] ~ dbin(W[i,k] * p_det, 1)
       }
     }
   }
@@ -646,14 +652,14 @@ summary(Occ.DC)
     ##    plus standard error of the mean:
     ## 
     ##           Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## p_det   0.5503 0.09675 0.2163 0.0007900       0.002250 1.003
-    ## phi_occ 0.2205 0.05039 0.1127 0.0004114       0.001235 1.005
+    ## p_det   0.5490 0.09941 0.2223 0.0008117       0.002277 1.005
+    ## phi_occ 0.2207 0.04961 0.1109 0.0004051       0.001191 1.007
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##           2.5%    25%    50%    75%  97.5%
-    ## p_det   0.3511 0.4855 0.5540 0.6176 0.7315
-    ## phi_occ 0.1389 0.1857 0.2149 0.2486 0.3350
+    ## p_det   0.3450 0.4822 0.5536 0.6204 0.7292
+    ## phi_occ 0.1397 0.1862 0.2150 0.2491 0.3341
 
 ``` r
 plot(Occ.DC)
@@ -662,19 +668,25 @@ plot(Occ.DC)
 ![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 ``` r
+pairs(Occ.DC)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
+
+``` r
 dcdiag(Occ.DC)
 ```
 
-    ##   n.clones lambda.max  ms.error r.squared    r.hat
-    ## 1        1 0.05348012 0.3339641 0.0425344 1.001282
-    ## 2        2 0.02618914 1.2255274 0.1315938 1.014639
-    ## 3        5 0.01034708 0.9043499 0.1184760 1.003717
+    ##   n.clones lambda.max  ms.error  r.squared    r.hat
+    ## 1        1 0.04664598 0.6283849 0.08100921 1.003439
+    ## 2        2 0.02751645 2.4216953 0.21045098 1.009831
+    ## 3        5 0.01082814 0.4888196 0.08171408 1.005934
 
 ``` r
 plot(dcdiag(Occ.DC))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-3.png)<!-- -->
 
 ## Random effects in regression: Why and when?
 
@@ -852,16 +864,16 @@ summary(LM_Bayes_fit)
     ##    plus standard error of the mean:
     ## 
     ##         Mean     SD  Naive SE Time-series SE
-    ## mu.t  1.9332 0.1495 0.0012206       0.002868
-    ## sigma 0.9273 0.1041 0.0008503       0.001514
-    ## tau   0.4556 0.1518 0.0012392       0.004392
+    ## mu.t  1.9335 0.1486 0.0012130       0.003007
+    ## sigma 0.9262 0.1040 0.0008491       0.001376
+    ## tau   0.4562 0.1505 0.0012292       0.004093
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##         2.5%    25%    50%    75%  97.5%
-    ## mu.t  1.6409 1.8343 1.9322 2.0335 2.2285
-    ## sigma 0.7450 0.8550 0.9195 0.9912 1.1525
-    ## tau   0.2051 0.3421 0.4430 0.5535 0.7864
+    ## mu.t  1.6417 1.8352 1.9328 2.0297 2.2265
+    ## sigma 0.7405 0.8527 0.9219 0.9911 1.1463
+    ## tau   0.2080 0.3455 0.4441 0.5494 0.7848
 
 We will modify it to do data cloning. This is useful to assure us that
 the parameters are estimable. It is also important for making it
@@ -953,16 +965,16 @@ summary(LM_DC_fit)
     ##    plus standard error of the mean:
     ## 
     ##         Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## mu.t  1.9369 0.06302 0.1409 0.0005145       0.001334 1.003
-    ## sigma 0.9251 0.04848 0.1084 0.0003958       0.001242 1.002
-    ## tau   0.3865 0.08627 0.1929 0.0007044       0.003845 1.007
+    ## mu.t  1.9373 0.06283 0.1405 0.0005130       0.001415 1.002
+    ## sigma 0.9282 0.04902 0.1096 0.0004002       0.001219 1.001
+    ## tau   0.3763 0.09082 0.2031 0.0007415       0.004514 1.005
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##         2.5%    25%    50%    75%  97.5%
-    ## mu.t  1.8126 1.8939 1.9375 1.9802 2.0602
-    ## sigma 0.8330 0.8920 0.9237 0.9578 1.0224
-    ## tau   0.2174 0.3274 0.3852 0.4476 0.5529
+    ## mu.t  1.8160 1.8943 1.9368 1.9801 2.0601
+    ## sigma 0.8343 0.8947 0.9278 0.9608 1.0260
+    ## tau   0.2083 0.3101 0.3761 0.4406 0.5526
 
 ``` r
 pairs(LM_DC_fit)
@@ -975,9 +987,9 @@ dcdiag(LM_DC_fit)
 ```
 
     ##   n.clones  lambda.max   ms.error   r.squared    r.hat
-    ## 1        1 0.024605910 0.22765240 0.023800795 1.002562
-    ## 2        2 0.015053325 0.05660741 0.008518448 1.007700
-    ## 3        5 0.008131706 0.00871139 0.001428311 1.007885
+    ## 1        1 0.025016214 0.43642416 0.047753829 1.004067
+    ## 2        2 0.014692290 0.06579741 0.009428430 1.001947
+    ## 3        5 0.008960959 0.01376262 0.001830729 1.004501
 
 ``` r
 plot(dcdiag(LM_DC_fit))
@@ -1055,15 +1067,15 @@ summary(GLMM_Bayes_fit)
     ## 1. Empirical mean and standard deviation for each variable,
     ##    plus standard error of the mean:
     ## 
-    ##         Mean     SD  Naive SE Time-series SE
-    ## lambda 7.111 0.8704 0.0071072        0.01179
-    ## tau    0.532 0.1078 0.0008799        0.00203
+    ##          Mean     SD  Naive SE Time-series SE
+    ## lambda 7.0957 0.8809 0.0071925       0.012223
+    ## tau    0.5326 0.1075 0.0008777       0.002013
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##          2.5%    25%    50%    75%  97.5%
-    ## lambda 5.4940 6.5145 7.0784 7.6643 8.9063
-    ## tau    0.3482 0.4561 0.5221 0.5992 0.7648
+    ## lambda 5.4448 6.4968 7.0643 7.6645 8.8950
+    ## tau    0.3478 0.4568 0.5235 0.5988 0.7681
 
 As usual, we can turn the crank for data cloning to check the
 estimability of the parameters.
@@ -1149,14 +1161,14 @@ summary(GLMM_DC_fit)
     ##    plus standard error of the mean:
     ## 
     ##          Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## lambda 7.0842 0.38081 0.8515 0.0031093      0.0055526 1.001
-    ## tau    0.5079 0.04625 0.1034 0.0003776      0.0008574 1.002
+    ## lambda 7.0868 0.37301 0.8341 0.0030456      0.0049183 1.002
+    ## tau    0.5076 0.04621 0.1033 0.0003773      0.0008546 1.003
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##          2.5%    25%    50%    75%  97.5%
-    ## lambda 6.3515 6.8223 7.0826 7.3433 7.8313
-    ## tau    0.4236 0.4755 0.5061 0.5377 0.6033
+    ##          2.5%    25%   50%    75%  97.5%
+    ## lambda 6.3538 6.8360 7.085 7.3382 7.8254
+    ## tau    0.4219 0.4758 0.506 0.5375 0.6028
 
 ``` r
 exp(mu_true)
@@ -1313,16 +1325,16 @@ summary(GLMM_Bayes_fit)
     ##    plus standard error of the mean:
     ## 
     ##          Mean     SD Naive SE Time-series SE
-    ## delta 1.05477 0.1900 0.001551       0.006965
-    ## mu.t  0.05857 0.1304 0.001065       0.006024
-    ## tau   0.65582 0.2130 0.001739       0.023416
+    ## delta 1.04916 0.1899 0.001551       0.007083
+    ## mu.t  0.06138 0.1268 0.001036       0.005705
+    ## tau   0.64141 0.2412 0.001969       0.030434
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##          2.5%      25%     50%    75%  97.5%
-    ## delta  0.6869  0.92595 1.05174 1.1799 1.4319
-    ## mu.t  -0.1927 -0.02852 0.05729 0.1439 0.3234
-    ## tau    0.2760  0.50037 0.65182 0.7941 1.1043
+    ##          2.5%     25%     50%    75%  97.5%
+    ## delta  0.6889  0.9179 1.04396 1.1781 1.4257
+    ## mu.t  -0.1898 -0.0211 0.06136 0.1429 0.3128
+    ## tau    0.2275  0.4582 0.63025 0.8038 1.1450
 
 We will modify this to get the MLE using data cloning.
 
@@ -1391,6 +1403,9 @@ GLMM_DC_fit = dc.fit(data=dat, params=c("delta","mu.t","tau"), model=GLMM_DC,
     ## 
     ## Initializing model
 
+    ## Warning in dclone::.dcFit(data, params, model, inits, n.clones, multiply =
+    ## multiply, : chains convergence problem, see R.hat values
+
 ``` r
 summary(GLMM_DC_fit)
 ```
@@ -1406,16 +1421,16 @@ summary(GLMM_DC_fit)
     ##    plus standard error of the mean:
     ## 
     ##          Mean      SD  DC SD  Naive SE Time-series SE R hat
-    ## delta 1.03814 0.08686 0.1942 0.0007092       0.003383 1.004
-    ## mu.t  0.06138 0.05546 0.1240 0.0004529       0.002425 1.003
-    ## tau   0.62338 0.11858 0.2651 0.0009682       0.016359 1.036
+    ## delta 1.03474 0.08489 0.1898 0.0006931       0.003489 1.013
+    ## mu.t  0.06253 0.05568 0.1245 0.0004546       0.002665 1.007
+    ## tau   0.61621 0.11697 0.2615 0.0009550       0.017286 1.196
     ## 
     ## 2. Quantiles for each variable:
     ## 
-    ##           2.5%     25%    50%     75%  97.5%
-    ## delta  0.87030 0.97888 1.0373 1.09674 1.2117
-    ## mu.t  -0.04754 0.02392 0.0614 0.09916 0.1691
-    ## tau    0.38629 0.54300 0.6204 0.70369 0.8555
+    ##          2.5%    25%    50%    75%  97.5%
+    ## delta  0.8738 0.9761 1.0329 1.0909 1.2041
+    ## mu.t  -0.0487 0.0252 0.0632 0.1005 0.1720
+    ## tau    0.3798 0.5358 0.6281 0.6987 0.8241
 
 ``` r
 pairs(GLMM_DC_fit)
@@ -1428,9 +1443,9 @@ dcdiag(GLMM_DC_fit)
 ```
 
     ##   n.clones lambda.max    ms.error    r.squared    r.hat
-    ## 1        1 0.06330392 0.008709029 0.0008659365 1.043179
-    ## 2        2 0.03887969 0.021926101 0.0020470154 1.094722
-    ## 3        5 0.01613287 0.004337083 0.0005956888 1.026414
+    ## 1        1 0.05554438 0.013310631 0.0022067098 1.040160
+    ## 2        2 0.03466757 0.007165586 0.0004594423 1.045218
+    ## 3        5 0.01494346 0.005112644 0.0005087899 1.153077
 
 ``` r
 plot(dcdiag(GLMM_DC_fit))
@@ -1553,16 +1568,16 @@ summary(DC.MLE)
     ##    plus standard error of the mean:
     ## 
     ##             Mean      SD   DC SD  Naive SE Time-series SE R hat
-    ## parms[1] -0.1955 0.01225 0.04899 7.746e-05      0.0002699 1.001
-    ## parms[2] -2.2621 0.02869 0.11478 1.815e-04      0.0008476 1.002
-    ## parms[3]  1.3643 0.08443 0.33773 5.340e-04      0.0060733 1.022
+    ## parms[1] -0.1955 0.01227 0.04907 7.759e-05      0.0002756 1.001
+    ## parms[2] -2.2606 0.02915 0.11658 1.843e-04      0.0008577 1.006
+    ## parms[3]  1.3722 0.08766 0.35063 5.544e-04      0.0066541 1.016
     ## 
     ## 2. Quantiles for each variable:
     ## 
     ##             2.5%     25%     50%     75%   97.5%
-    ## parms[1] -0.2194 -0.2035 -0.1956 -0.1873 -0.1715
-    ## parms[2] -2.3187 -2.2809 -2.2617 -2.2433 -2.2038
-    ## parms[3]  1.1880  1.3103  1.3667  1.4197  1.5219
+    ## parms[1] -0.2198 -0.2034 -0.1957 -0.1875 -0.1709
+    ## parms[2] -2.3179 -2.2805 -2.2604 -2.2406 -2.2030
+    ## parms[3]  1.1981  1.3137  1.3746  1.4314  1.5443
 
 ``` r
 dctable(DC.MLE)
@@ -1570,33 +1585,33 @@ dctable(DC.MLE)
 
     ## $`parms[1]`
     ##   n.clones       mean         sd       2.5%        25%        50%        75%
-    ## 1        1 -0.1962588 0.05060023 -0.2909296 -0.2302265 -0.1964363 -0.1612282
-    ## 2        4 -0.1951291 0.02474131 -0.2443361 -0.2114888 -0.1953264 -0.1784273
-    ## 3       16 -0.1955156 0.01224777 -0.2193745 -0.2035219 -0.1955766 -0.1873386
+    ## 1        1 -0.1967822 0.05086942 -0.3001700 -0.2292793 -0.1969212 -0.1618755
+    ## 2        4 -0.1960744 0.02461489 -0.2438344 -0.2126101 -0.1960661 -0.1800440
+    ## 3       16 -0.1955114 0.01226765 -0.2198233 -0.2034152 -0.1957413 -0.1874821
     ##         97.5%    r.hat
-    ## 1 -0.09691651 1.001245
-    ## 2 -0.14633269 1.000799
-    ## 3 -0.17148523 1.000919
+    ## 1 -0.09788925 1.001555
+    ## 2 -0.14774656 1.001717
+    ## 3 -0.17088934 1.001214
     ## 
     ## $`parms[2]`
     ##   n.clones      mean         sd      2.5%       25%       50%       75%
-    ## 1        1 -2.265504 0.12071400 -2.508465 -2.345284 -2.266183 -2.186500
-    ## 2        4 -2.263082 0.05873369 -2.378808 -2.300076 -2.262953 -2.224601
-    ## 3       16 -2.262134 0.02869399 -2.318724 -2.280857 -2.261724 -2.243336
+    ## 1        1 -2.263886 0.12665748 -2.514811 -2.347228 -2.263595 -2.182735
+    ## 2        4 -2.262892 0.05870808 -2.377245 -2.303425 -2.263626 -2.222445
+    ## 3       16 -2.260610 0.02914559 -2.317946 -2.280503 -2.260361 -2.240584
     ##       97.5%    r.hat
-    ## 1 -2.029327 1.006588
-    ## 2 -2.148635 1.006884
-    ## 3 -2.203778 1.002123
+    ## 1 -2.014788 1.002390
+    ## 2 -2.148945 1.003344
+    ## 3 -2.202965 1.005775
     ## 
     ## $`parms[3]`
-    ##   n.clones     mean        sd      2.5%      25%      50%      75%    97.5%
-    ## 1        1 1.289238 0.3487657 0.5772857 1.055585 1.300952 1.522908 1.945893
-    ## 2        4 1.359040 0.1722342 1.0018284 1.243065 1.364020 1.475816 1.693881
-    ## 3       16 1.364287 0.0844322 1.1880357 1.310287 1.366748 1.419670 1.521893
+    ##   n.clones     mean         sd      2.5%      25%      50%      75%    97.5%
+    ## 1        1 1.291844 0.35597771 0.5389383 1.067195 1.291879 1.534859 1.951889
+    ## 2        4 1.338254 0.17234192 0.9944665 1.221094 1.347153 1.455700 1.666043
+    ## 3       16 1.372248 0.08765874 1.1981269 1.313661 1.374572 1.431378 1.544339
     ##      r.hat
-    ## 1 1.011778
-    ## 2 1.021351
-    ## 3 1.021884
+    ## 1 1.015632
+    ## 2 1.032113
+    ## 3 1.015641
     ## 
     ## attr(,"class")
     ## [1] "dctable"
@@ -1605,10 +1620,10 @@ dctable(DC.MLE)
 dcdiag(DC.MLE)
 ```
 
-    ##   n.clones  lambda.max    ms.error   r.squared    r.hat
-    ## 1        1 0.121693755 0.021720949 0.003552573 1.011516
-    ## 2        4 0.029688078 0.009894563 0.001291571 1.018007
-    ## 3       16 0.007128992 0.017287583 0.001384011 1.017402
+    ##   n.clones  lambda.max    ms.error    r.squared    r.hat
+    ## 1        1 0.126791953 0.112778135 0.0080045465 1.014178
+    ## 2        4 0.029710909 0.006456397 0.0010758744 1.034414
+    ## 3       16 0.007688926 0.005848323 0.0009007009 1.017262
 
 It should be clear by now that we can modify any Bayesian analysis to
 get Maximum likelihood estimate quite easily by adding one dimension to
